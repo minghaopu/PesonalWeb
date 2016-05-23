@@ -1,13 +1,11 @@
-var mpw = angular.module('mpw', ['ngRoute', 'ngCookies']);
+var mpw = angular.module("mpw", ["ngRoute", "ngCookies"]);
 mpw.config([
-	'$controllerProvider',
-	'$routeProvider',
-	'$filterProvider',
-	'$provide',
-	'$locationProvider',
+	"$controllerProvider",
+	"$routeProvider",
+	"$filterProvider",
+	"$provide",
+	"$locationProvider",
 	function($controllerProvider, $routeProvider, $filterProvider, $provide, $locationProvider) {
-
-
 		$locationProvider.html5Mode({
 			enabled: true,
 			requireBase: false
@@ -19,25 +17,11 @@ mpw.config([
 		mpw.factory = $provide.factory;
 		mpw.service = $provide.service;
 
-		
 	}
-]);
-
-mpw.run(['$module','$user', function($module, $user) {
+]).run(["$module", "$user", "$rootScope", function($module, $user, $rootScope) {
 	$module.init();
-	$user.checkStatus();
+	$user.checkLogin();
+
+	$rootScope.pageTitle = $user.nickname || "MPW"; //need to change with url
+
 }])
-
-
-
-// mpw.config(['$controllerProvider','$routeProvider', '$filterProvider','$provide',
-// 	function($controllerProvider, $routeProvider, $filterProvider,$provide) {
-// 		mpw.register = {
-// 			controller: $controllerProvider.register,
-// 			filter: $filterProvider,
-// 			factory: $provide.factory,
-// 			service: $provide.service
-// 		}
-// 	}])
-
-// ])

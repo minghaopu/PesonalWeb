@@ -1,16 +1,28 @@
 <!doctype html>
 <html ng-app="mpw">
-	<head>
-		<base href="/PesonalWeb/">
-	</head>
-	<body ng-controller="index">
-		<div ng-view id="main-container">
-			
-		</div>
-		<div>
-			<p>{{nick}}</p>
-		</div>
-	</body>
+
+<head>
+	<meta charset="utf-8">
+	<base href="/PesonalWeb/">
+	<title ng-bind="pageTitle"></title>
+</head>
+<body ng-controller="index">
+
+	<div class="main-wrapper">
+		<header>
+			<div navigator></div>
+		</header>
+		<div ng-view id="main-container"></div>
+		<footer>
+			<div app-link></div>
+			<div id="copyright" class="text-container copyright-container">
+				<span class="text copyright-content"></span>
+			</div>
+		</footer>
+		
+	</div>
+	<div message></div>
+	<div loading></div>
 
 	<!-- lib js -->
 	<script type="text/javascript" src="./lib/angularjs/angular.js"></script>
@@ -22,6 +34,5 @@
 	<script type="text/javascript" src="./js/service/service.js"></script>
 	<script type="text/javascript" src="./js/directive/widget.js"></script>
 	<script type="text/javascript" src="./js/controller/index.js"></script>
-
-
+</body>
 </html>

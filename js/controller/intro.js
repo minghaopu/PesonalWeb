@@ -1,3 +1,3 @@
-mpw.controller("intro", ["$scope", "$module", function($scope, $module){
+mpw.controller("intro", ["$scope", "$module", "$user", function($scope, $module, $user){
 	$scope.someText = "intro";
 }])
