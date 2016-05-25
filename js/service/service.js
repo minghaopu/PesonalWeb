@@ -10,6 +10,14 @@ mpw.factory("$module", [
 		var history = [];
 
 		var routes = {
+			"login": {
+				name: "login",
+				url: "/login",
+				// url: "/:userNickName/passage/:passageId",
+				controller: "login",
+				controllerJs: "./js/controller/login.js",
+				templateUrl: "./view/login.html"
+			},
 			"intro": {
 				name: "intro",
 				url: "/intro",
@@ -20,19 +28,11 @@ mpw.factory("$module", [
 			},
 			"passage": {
 				name: "passage",
-				url: "/passage/123",
+				url: "/passage/:passageId",
 				// url: "/:userNickName/passage/:passageId",
 				controller: "passage",
 				controllerJs: "./js/controller/passage.js",
 				templateUrl: "./view/passage.html"
-			},
-			"resume": {
-				name: "resume",
-				url: "/resume",
-				//url: "/:userNickName/resume",
-				controller: "resume",
-				controllerJs: "./js/controller/resume.js",
-				templateUrl: "./view/resume.html"
 			},
 			"blog": {
 				name: "blog",
@@ -42,12 +42,27 @@ mpw.factory("$module", [
 				controllerJs: "./js/controller/blog.js",
 				templateUrl: "./view/blog.html"
 			},
+			"resume": {
+				name: "resume",
+				url: "/resume",
+				//url: "/:userNickName/resume",
+				controller: "resume",
+				controllerJs: "./js/controller/resume.js",
+				templateUrl: "./view/resume.html"
+			},
 			"error": {
 				name: "error",
 				url: "/error",
 				controller: "error",
 				controllerJs: "./js/controller/error.js",
 				templateUrl: "./view/error.html"
+			},
+			"profile": {
+				name: "profile",
+				url: "/profile",
+				controller: "profile",
+				controllerJs: "./js/controller/profile.js",
+				templateUrl: "./view/profile.html"
 			}
 		};
 
@@ -64,7 +79,6 @@ mpw.factory("$module", [
 		};
 
 		return {
-			currentModule: "",
 			history: ["intro"],
 			init: function() {
 				var route, controllerJs;
@@ -77,9 +91,12 @@ mpw.factory("$module", [
 					};
 					mpw.routeProvider.when(route.url, route);
 				}
+
 				mpw.routeProvider.otherwise({
-					redirectTo: routes["intro"].url
+					redirectTo: "/error"
 				});
+
+
 				// var route = routes[module];
 
 				// var controllerJs = route.controllerJs;
@@ -105,29 +122,28 @@ mpw.factory("$module", [
 				// };
 
 			},
-			goTo: function(module) {
+			// goTo: function(module) {
 
-				module = module.toLowerCase();
-				if (routes[module] === undefined) {
-					module = "error";
-				}
+			// 	module = module.toLowerCase();
+			// 	if (routes[module] === undefined) {
+			// 		module = "error";
+			// 	}
 
-				if (currentModule !== "") history.push(currentModule);
-				currentModule = module;
+			// 	if (currentModule !== "") history.push(currentModule);
+			// 	currentModule = module;
 
-				$location.path(routes[module].url);
-			},
-			goBack: function() {
-				var pre = history.pop() || "intro";
-				currentModule = pre;
-				$location.path(routes[pre].url);
-			},
-			getRoutes: function() {
-				return routes;
-			}
+			// 	$location.path(routes[module].url);
+			// },
+			// goBack: function() {
+			// 	var pre = history.pop() || "intro";
+		// 	currentModule = pre;
+		// 	$location.path(routes[pre].url);
+		// },
+		getRoutes: function() {
+			return routes;
 		}
 	}
-]);
+}]);
 
 mpw.factory("$request", [
 	"$http",
@@ -140,8 +156,7 @@ mpw.factory("$request", [
 		};
 		return {
 			query: function(options, success, failure, error) {
-				var config = angular.extend({},
-					defaultConfig, options);
+				var config = angular.extend({}, defaultConfig, options);
 				var successFn = success || function() {};
 				var failureFn = failure || function() {};
 				var errorFn = error || function() {};
@@ -155,19 +170,29 @@ mpw.factory("$request", [
 						}
 					}).error(errorFn);
 				} else {
-					$http(config).then(function(data, status, headers, config) {
+					var promise = (function() {
+						var deferred = $q.defer();
+						$http(config).success(function(data, status, headers, config) {
+							deferred.resolve(data);
+						}).error(function(data, status, headers, config) {
+							deferred.reject(data);
+						})
+						return deferred.promise;
+					})();
+					promise.then(function(data) {
 						if (data.success) {
-							successFn(data.data, status, headers, config);
+							successFn(data.data);
 						} else {
-							failureFn(data.error, status, headers, config);
+							failureFn(data.error);
 						}
-					}, errorFn);
+					}, function(data) {
+						errorFn(data);
+					});
 				}
 			}
 		}
 	}
 ])
-
 mpw.factory("$user", [
 	"$request",
 	"$session",
@@ -175,44 +200,51 @@ mpw.factory("$user", [
 	"$location",
 	function($request, $session, $encrypt, $location) {
 		var me = this;
+		var isLogged = false;
+		var nickname = "";
 		return {
-			nickname: "MinghaoPU",
 			login: function(data) {
 
 				$request.query({
 					url: "./data/login.json",
-					action: "login",
 					data: data
 				}, function(data) {
-					me.nickname = data.nickname;
+					nickname = data.nickname;
 					$session.set("pw", data);
 					$location.path("/blog");
+					isLogged = true;
 				}, function() {
+					isLogged = false;
 					console.log("login fail");
-					//error msg
-					$location.path("/intro");
 				})
 			},
 			checkLogin: function() {
 				if (!$session.checkSessionStorage()) {
-					$location.path("/intro");
-					return false;
+					// $location.path("/intro");
+					isLogged = false;
+					$location.path("/login");
+					return;
 				}
 				var data = $session.get("pw");
 				if (!angular.isObject(data)) {
-					$location.path("/intro");
-					return false;
+					// $location.path("/intro");
+					isLogged = false;
+					$location.path("/login");
+					return;
 				}
 				$request.query({
 					url: "./data/loginInfo.json",
 					action: "check",
+					async: false,
 					data: data
 				}, function(data) {
 					$location.path("/blog");
-					return true;
+					isLogged = true;
+					nickname = data.nickname;
 				}, function() {
-					$location.path("/intro");
-					return false;
+					$location.path("/login");
+					isLogged = false;
+					console.log("false")
 					// error message
 				})
 			},
@@ -228,14 +260,24 @@ mpw.factory("$user", [
 				})
 			},
 			logout: function() {
-				$session.destroy("uid");
-				$request.quesy({
+				$session.destroy("pw");
+				$request.query({
 					url: "./data/logout.json",
 					action: "logout"
 				}, function() {
-					$location.path("/intro");
+					$location.path("/login");
+					isLogged = false;
 				})
 			},
+			getStatus: function() {
+				return isLogged;
+			},
+			getName: function() {
+				return nickname;
+			},
+			getId: function() {
+				return $session.get("pw").uid;
+			}
 		};
 	}
 ])
@@ -258,9 +300,9 @@ mpw.factory("$util", ["", function() {
 mpw.factory("$message", function() {
 	var isVisible = false;
 	var defaultConfig = {
-		titleText: "",
+		title: "testing",
 		titleIcon: "./img/error.png",
-		text: "",
+		text: "testing",
 		hasBtn: true,
 		button: [{
 			text: "OK",
@@ -274,19 +316,22 @@ mpw.factory("$message", function() {
 			fn: function() {}
 		}]
 	};
-	var config = {};
+	var config = null;
 	return {
 		show: function() {
+			if (arguments[0]) {
+				config = angular.extend({}, defaultConfig, options);
+			} else {
+				config = defaultConfig;
+			}
 			isVisible = true;
 		},
 		hide: function() {
 			isVisible = false;
-			config = {};
-		},
-		config: function(options) {
-			config = angular.extend({}, defaultConfig, options);
+			config = null;
 		},
 		getConfig: function() {
+			if (config === null) return defaultConfig
 			return config;
 		},
 		getStatus: function() {
@@ -311,5 +356,10 @@ mpw.factory("$session", function() {
 		destroy: function(key) {
 			return localStorage.removeItem(key);
 		}
+	};
+})
+mpw.factory("$validation", function() {
+	return {
+
 	};
 })

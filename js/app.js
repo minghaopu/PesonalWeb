@@ -19,9 +19,8 @@ mpw.config([
 
 	}
 ]).run(["$module", "$user", "$rootScope", function($module, $user, $rootScope) {
-	$module.init();
-	$user.checkLogin();
-
+	
+	
 	$rootScope.pageTitle = $user.nickname || "MPW"; //need to change with url
 
 }])

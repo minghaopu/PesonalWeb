@@ -3,23 +3,35 @@
 
 <head>
 	<meta charset="utf-8">
+	<link rel="stylesheet" href="./css/reset.css">
+	<link rel="stylesheet" href="./css/style.css">
+
+
 	<base href="/PesonalWeb/">
 	<title ng-bind="pageTitle"></title>
-</head>
-<body ng-controller="index">
 
-	<div class="main-wrapper">
+</head>
+<body ng-controller="index" ng-switch on="isLogged" ng-class="isLogged?'logged':''">
+
+	<div class="main-wrapper" ng-switch-when="true">
 		<header>
 			<div navigator></div>
 		</header>
-		<div ng-view id="main-container"></div>
+		<div class="main-container">
+			<div ng-view class="main-content"></div>
+		</div>
 		<footer>
 			<div app-link></div>
 			<div id="copyright" class="text-container copyright-container">
-				<span class="text copyright-content"></span>
+				<p class="text copyright-content">{{copyright}}</p>
 			</div>
 		</footer>
-		
+
+	</div>
+	<div class="main-wrapper" ng-switch-when="false">
+		<div class="main-container">
+			<div ng-view class="main-content"></div>
+		</div>
 	</div>
 	<div message></div>
 	<div loading></div>
