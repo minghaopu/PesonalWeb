@@ -119,7 +119,8 @@ mpw.directive("appLink", function() {
 	return {
 		restrict: "A",
 		replace: true,
-		template: innerHTML
+		template: innerHTML,
+		scope: false
 	}
 });
 
@@ -239,10 +240,41 @@ mpw.directive("list", ["$location", function($location) {
 		}
 	}
 }])
+
+mpw.directive("pdf", function() {
+	var innerHTML = 	"<div class=\"widget-pdf-container\" ng-switch on=\"config.isEmpty\">";
+		innerHTML +=		"<div class=\"widget-pdf-content\" ng-switch-when=\"false\">";
+		innerHTML += 			"<iframe ng-src=\"{{config.url}}\" type=\"application/pdf\" ></iframe>";
+		innerHTML +=		"</div>";
+		innerHTML +=		"<div class=\"widget-pdf-empty-content\" ng-switch-when=\"true\">";
+		innerHTML +=			"<span class=\"widget-pdf-empty-text\">{{config.emptyMsg}}</span>";
+		innerHTML +=		"</div>";
+		innerHTML += 	"</div>";
+	return {
+		restrict: "A",
+		replace: true,
+		scope: {
+			config: "="
+		},
+		template: innerHTML,
+		compile: function(ele, attr, trans) {
+			var defaultConfig = {
+				isEmpty: true,
+				emptyMsg: "You have not uploaded any resume"
+			}
+			return function(scope, ele, attr) {
+				scope.config = angular.extend({}, defaultConfig, scope.config);
+			}
+		}
+	}
+})
 // mpw.directive("button", function() {
 
 // })
 
-// mpw.directive("loading", ["$message", function($message) {
+// mpw.directive("loading", function() {
 
-// }]);
+// });
+// mpw.directive("editor", function() {
+
+// })

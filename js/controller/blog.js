@@ -8,7 +8,7 @@ mpw.controller("blog", ["$scope", "$user", "$request", function($scope, $user, $
 	$request.query({
 		url: "./data/blog.json",
 		data: {
-			uid: $user.getId,
+			uid: $user.getId(),
 			action: "getBlog"
 		}
 	}, function(data) {
