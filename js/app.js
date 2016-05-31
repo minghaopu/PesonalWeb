@@ -1,4 +1,4 @@
-var mpw = angular.module("mpw", ["ngRoute", "ngCookies"]);
+var mpw = angular.module("mpw", ["ngRoute", "ngCookies", "textAngular"]);
 mpw.config([
 	"$controllerProvider",
 	"$routeProvider",

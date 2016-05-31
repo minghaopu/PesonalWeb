@@ -1,0 +1,142 @@
+/*div.widget-editor-content {
+	width: 100%;
+	height: 300px;
+	margin: 10px 0 10px 0;
+	border: 2px solid rgba(0,0,0,0.8);
+	padding: 3px;
+}
+div.widget-editor-content:focus {
+	outline: 0px solid transparent;
+}
+div.widget-tool-container ul li {
+	display: inline;
+	width: 24px;
+	height: 24px;
+	cursor: pointer;
+}
+div.widget-tool-container ul li div:hover {
+	border: 1px solid #000000;
+}
+div.widget-tool-container ul li div{
+	border: 1px solid rgba(0,0,0,0);
+	display: inline;
+	padding: 3px;
+}
+div.widget-tool-container ul li div img {
+	height: 16px;
+	width: 16px;
+}
+
+*/
+/*Message*/
+div.widget-msg-mask-layer {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #eeeeee;
+	opacity: 0.8;
+	z-index: 99;
+}
+div.widget-msg-container {
+	position: absolute;
+	width: 20%;
+	height: 20%;
+	top: 40%;
+	left: 40%;
+	z-index: 100;
+}
+
+/*navigator*/
+div.widget-nav-container {
+	position: relative;
+	top: 25%;
+	height: 50%;
+	margin:0 20px 0 20px;
+}
+div.widget-nav-container li.widget-nav-li {
+	display: inline;
+	margin-right: 3%;
+}
+div.widget-nav-container li.widget-nav-li:last-child {
+	margin-right: 0;
+}
+div.widget-nav-content a {
+	color: #ffffff;
+}
+
+div.widget-user-container {
+	position: absolute;
+	top: 0;
+	right: 0;
+	cursor: pointer;
+}
+div.widget-user-container span {
+	color: #ffffff;
+}
+
+div.widget-drop-content {
+	position: absolute;
+	top: 22px;
+	right: 0px;
+	text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+    width: 100px;
+    background-color: #f3f3f3;
+}
+
+li.widget-drop-li {
+    padding: 5px;
+}
+li.widget-drop-li:first-child{
+	border-bottom: 1px solid #aaa;
+}
+li.widget-drop-li a {
+	font-family: sans-serif;
+	font-weight: normal;
+}
+
+/*pdf*/
+
+div.widget-pdf-content {
+	position: relative;
+	padding-bottom: 100%;
+	height: 0;
+	overflow: hidden;
+	max-width: 100%;
+	height: auto;
+}
+
+div.widget-pdf-content iframe {
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+}
+
+/*app-link*/
+div.widget-apps-container {
+	padding-bottom: 15px;
+}
+div.widget-apps-container ul li{
+	display: inline;
+	margin-right: 20px;
+}
+div.widget-apps-container ul li:last-child {
+	margin-right: 0px;
+}
+div.widget-apps-container img{
+	height: 30px;
+}
+
+/*file*/
+
+div.widget-file-wrapper div.widget-preview-container img{
+	width: 100px;
+	height: 100px;
+}
