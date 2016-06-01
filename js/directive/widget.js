@@ -134,8 +134,8 @@ mpw.directive("textBox", function() {
 		innerHTML +=				"<span class=\"widget-lable-text\">{{config.label}}</span>";
 		innerHTML +=			"</div>";
 		innerHTML +=		"</div>";
-		innerHTML +=		"<div class=\"widget-text-content {{config.inputCls}}\">";
-		innerHTML +=			"<input type=\"{{config.type}}\"";
+		innerHTML +=		"<div class=\"widget-text-content {{config.inputCls}}\" ng-switch on=\"config.inputType\">";
+		innerHTML +=			"<input ng-switch-when=\"input\" type=\"{{config.type}}\"";
 		innerHTML +=					" name=\"{{config.name}}\"";
 		innerHTML +=					" class=\"widget-text-input\"";
 		innerHTML +=					" ng-readonly=\"config.readOnly\"";
@@ -144,7 +144,16 @@ mpw.directive("textBox", function() {
 		innerHTML +=					" placeholder=\"{{config.placeholder}}\"";
 		innerHTML +=					" ng-disabled=\"config.disabled\"";
 		innerHTML +=					" ng-trim=\"config.trim\"";
-		innerHTML +						" ng-model=\"config.data\">";
+		innerHTML +=					" ng-model=\"config.data\">";
+		innerHTML +=			"<textarea ng-switch-when=\"textarea\"";
+		innerHTML +=					" name=\"{{config.name}}\"";
+		innerHTML +=					" class=\"widget-text-input\"";
+		innerHTML +=					" maxlength=\"{{config.maxLength}}\"";
+		innerHTML +=					" placeholder=\"{{config.placeholder}}\"";
+		innerHTML +=					" readonly=\"{{config.readOnly}}\"";
+		innerHTML +=					" ng-disabled=\"config.disabled\"";
+		innerHTML +=					" ng-trim=\"config.trim\"";
+		innerHTML +=					" ng-model=\"config.data\"></textarea>";
 		innerHTML +=		"</div>";
 		innerHTML +=		"<div class=\"widget-error-container  {{config.errorCls}}\">";
 		innerHTML +=			"<div ng-hide=\"config.isValid\" class=\"widget-error-content\">";
@@ -165,7 +174,8 @@ mpw.directive("textBox", function() {
 				disabled: false,
 				type: "text",
 				trim: true,
-				isValid: true
+				isValid: true,
+				inputType: "input"
 			}
 			return function(scope, ele, attr) {
 				scope.config = angular.extend({}, defaultConfig, scope.config);
@@ -198,7 +208,6 @@ mpw.directive("button", function() {
 			}
 			return function(scope, ele, attr) {
 				scope.config = angular.extend({}, defaultConfig, scope.config);
-				console.log(scope.config)
 			}
 		}
 	}
@@ -412,10 +421,10 @@ mpw.directive("display", function() {
 		innerHTML +=			"</div>";
 		innerHTML +=		"</div>";
 		innerHTML +=		"<div ng-switch-when=\"text\" class=\"widget-display-text-content\">";
-		innerHTML +=			"<span class=\"widget-display-text\"></span>"
+		innerHTML +=			"<span class=\"widget-display-text\">{{config.text}}</span>"
 		innerHTML +=		"</div>";
 		innerHTML +=		"<div ng-switch-when=\"img\" class=\"widget-display-img-content\">";
-		innerHTML +=			"<img ng-src=\"{{config.imgSrc}}\" alt=\"\" />";
+		innerHTML +=			"<img class=\"{{config.imgCls}}\" ng-src=\"{{config.imgSrc}}\" alt=\"{{config.text}}\" />";
 		innerHTML +=		"</div>";
 		innerHTML +=	"</div>";
 	return {
@@ -430,7 +439,7 @@ mpw.directive("display", function() {
 				type: "text"
 			}
 			return function(scope, ele, attrs) {
-				scope.config = angular.extend({}, defaultConfig, $scope.config);
+				scope.config = angular.extend({}, defaultConfig, scope.config);
 			}
 		}
 	}

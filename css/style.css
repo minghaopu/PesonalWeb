@@ -56,7 +56,10 @@ div.main-wrapper footer p {
 	font-size: 0.8em;
 }
 
-
+div.widget-display-wrapper img.portrait{
+	height: 250px;
+	width: 250px;
+}
 
 /*textAngular*/
 .ta-editor {
