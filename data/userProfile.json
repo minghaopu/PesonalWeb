@@ -1,0 +1,24 @@
+{
+	"success": true,
+	"data": {
+		"portrait" : "./img/portrait/portrait.png",
+		"nickname" : "roneil",
+		"bio": "I'm MinghaoPu",
+		"apps": [{
+			"name": "linkedin",
+			"href": "https://www.linkedin.com/in/minghao-pu-8914bb70"
+		}, {
+			"name": "facebook",
+			"href": "https://www.facebook.com/roneil.pmh"
+		}, {
+			"name": "github",
+			"href": "https://github.com/roneilPMH"
+		}, {
+			"name": "twitter",
+			"href": "https://twitter.com/NealPu_MH"
+		}, {
+			"name": "email",
+			"href": "mailto:nealpu@gwu.edu"
+		}]
+	}
+}

@@ -1,1 +1,36 @@
-<div id="profile">{{someText}}</div>
+<div id="profile" ng-switch on="isEditing">
+	<section class="page-section" ng-switch-when="false" ng-controller="viewProfile">
+		<div class="page-section-content">
+			<div button config="widget.edit"></div>
+			<div display config="widget.portrait"></div>
+			<div display config="widget.nickname"></div>
+			<div display config="widget.bio"></div>
+		</div>
+		<div class="page-section-content">
+			<div display ng-repeat="app in widget.apps" config="app"></div>
+		</div>
+	</section>
+	<seciton class="page-section" ng-switch-when="true" ng-controller="editProfile">
+		<div class="page-section-content">
+			<div file config="widget.portrait"></div>
+		</div>
+		<div class="page-section-content">
+			<form name="profile" class="page-section-form">
+				<div text-box config="widget.nickname"></div>
+				<div text-box config="widget.bio"></div>
+				<div button config="widget.pwdBtn"></div>
+			</form>
+		</div>
+		<div class="page-section-content">
+			<form name="profile" class="page-section-form">
+				<div text-box config="widget.nickname"></div>
+				<div text-box config="widget.bio"></div>
+				<div text-box config="widget.email"></div>
+				<div text-box config="widget.facebook"></div>
+				<div text-box config="widget.twitter"></div>
+				<div text-box config="widget.linkedin"></div>
+				<div text-box config="widget.github"></div>
+			</form>
+		</div>
+	</seciton>
+</div>
