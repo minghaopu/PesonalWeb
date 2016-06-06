@@ -1,35 +1,38 @@
-<div id="profile" ng-switch on="isEditing">
-	<section class="page-section" ng-switch-when="false" ng-controller="viewProfile">
+<div id="profile">
+	<section class="page-section" ng-if="isEditing==false" >
 		<div class="page-section-content">
-			<div button config="widget.edit"></div>
-			<div display config="widget.portrait"></div>
-			<div display config="widget.nickname"></div>
-			<div display config="widget.bio"></div>
+			<div button config="widget.display.editBtn"></div>
+			<div display config="widget.display.portrait"></div>
+			<div display config="widget.display.nickname"></div>
+			<div display config="widget.display.bio"></div>
+			<div display config="widget.display.email"></div>
 		</div>
 		<div class="page-section-content">
-			<div display ng-repeat="app in widget.apps" config="app"></div>
+			<div display ng-repeat="app in widget.display.apps" config="app"></div>
 		</div>
 	</section>
-	<seciton class="page-section" ng-switch-when="true" ng-controller="editProfile">
+	<seciton class="page-section" ng-if="isEditing==true">
 		<div class="page-section-content">
-			<div file config="widget.portrait"></div>
+			<div file config="widget.portIn"></div>
 		</div>
 		<div class="page-section-content">
 			<form name="profile" class="page-section-form">
-				<div text-box config="widget.nickname"></div>
-				<div text-box config="widget.bio"></div>
-				<div button config="widget.pwdBtn"></div>
+				<div text-box config="widget.changePwdForm.oldPwd"></div>
+				<div text-box config="widget.changePwdForm.newPwd"></div>
+				<div text-box config="widget.changePwdForm.confirm"></div>
+				<div button config="widget.changePwdForm.pwdSubBtn"></div>
 			</form>
 		</div>
 		<div class="page-section-content">
 			<form name="profile" class="page-section-form">
-				<div text-box config="widget.nickname"></div>
-				<div text-box config="widget.bio"></div>
-				<div text-box config="widget.email"></div>
-				<div text-box config="widget.facebook"></div>
-				<div text-box config="widget.twitter"></div>
-				<div text-box config="widget.linkedin"></div>
-				<div text-box config="widget.github"></div>
+				<div text-box config="widget.updateForm.nicknameIn"></div>
+				<div text-box config="widget.updateForm.bio"></div>
+				<div text-box config="widget.updateForm.email"></div>
+				<div text-box config="widget.updateForm.facebook"></div>
+				<div text-box config="widget.updateForm.twitter"></div>
+				<div text-box config="widget.updateForm.linkedin"></div>
+				<div text-box config="widget.updateForm.github"></div>
+				<div button config="widget.updateForm.updateBtn"></div>
 			</form>
 		</div>
 	</seciton>

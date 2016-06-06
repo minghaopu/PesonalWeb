@@ -294,7 +294,7 @@ mpw.directive("file", ["$request", function($request) {
 		innerHTML +=			"<input type=\"file\"";
 		innerHTML +=					" name=\"{{config.name}}\"";
 		innerHTML +=					" class=\"widget-file-input\"";
-		innerHTML +=					" placeholder=\"{{config.placeholder}}\"";
+		// innerHTML +=					" placeholder=\"{{config.placeholder}}\"";
 		innerHTML +=					" ng-disabled=\"config.disabled\"";
 		innerHTML +						" ng-model=\"data\">";
 		innerHTML +=		"</div>";
@@ -319,23 +319,24 @@ mpw.directive("file", ["$request", function($request) {
 		},
 		controller: ["$scope", "$element", "$request", function($scope, $element, $request) {
 			var defaultConfig = {
-				placeholder: "file",
+				// placeholder: "file",
 				disabled: false,
 				isValid: true,
 				isImg: false,
+				url: "./data/upload.json",
 				btn: {
 					text: "Upload",
 					fn: function() {
+						console.log(this);
 						var data = new FormData();
 						data.append("file", $scope.data);
 						$request.query({
-							url: "./data/upload.json",
+							url: $scope.config.url,
 							data: data,
 							withCredentials: true,
 							headers: {"Content-Type": undefined },
 							transformRequest: angular.identity
 						})
-						console.log("a")
 					}
 				}
 			}
