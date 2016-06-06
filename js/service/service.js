@@ -136,14 +136,15 @@ mpw.factory("$module", [
 			// },
 			// goBack: function() {
 			// 	var pre = history.pop() || "intro";
-		// 	currentModule = pre;
-		// 	$location.path(routes[pre].url);
-		// },
-		getRoutes: function() {
-			return routes;
+			// 	currentModule = pre;
+			// 	$location.path(routes[pre].url);
+			// },
+			getRoutes: function() {
+				return routes;
+			}
 		}
 	}
-}]);
+]);
 
 mpw.factory("$request", [
 	"$http",
@@ -245,7 +246,7 @@ mpw.factory("$user", [
 					$location.path("/login");
 					isLogged = false;
 					console.log("false")
-					// error message
+						// error message
 				})
 			},
 			register: function(data) {
@@ -282,14 +283,14 @@ mpw.factory("$user", [
 	}
 ])
 
-mpw.factory("$encrypt", ["$rootScope", function($rootScope) {
-	var defaultConfig = "rsa";
+mpw.factory("$encrypt", function() {
+	var defaultConfig = "MD5";
 
 	return function $encrypt(data, options) {
 		var config = options || defaultConfig;
-		return data;
+		return CryptoJS.MD5(data).toString();
 	};
-}]);
+});
 
 mpw.factory("$util", ["", function() {
 	return function $util() {
@@ -363,3 +364,22 @@ mpw.factory("$validation", function() {
 
 	};
 })
+mpw.factory("$formatData", ["$encrypt", function($encrypt) {
+	return function $formatData(form, action) {
+		var formData = {
+			action: action || ""
+		}
+		var formInput = {};
+		for (prop in form) {
+			var obj = form[prop];
+			if (obj.data === undefined) continue;
+			if (obj.type !== undefined && obj.type === "password") {
+				formInput[obj.name] = $encrypt(obj.data);
+			}else{
+				formInput[obj.name] = obj.data;
+			}
+		}
+		formData.data = formInput;
+		return formData;
+	};
+}])
