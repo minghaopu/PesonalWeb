@@ -18,14 +18,14 @@ mpw.factory("$module", [
 				controllerJs: "./js/controller/login.js",
 				templateUrl: "./view/login.html"
 			},
-			"intro": {
-				name: "intro",
-				url: "/intro",
-				// url: "/:userNickName/passage/:passageId",
-				controller: "intro",
-				controllerJs: "./js/controller/intro.js",
-				templateUrl: "./view/intro.html"
-			},
+			// "intro": {
+			// 	name: "intro",
+			// 	url: "/intro",
+			// 	// url: "/:userNickName/passage/:passageId",
+			// 	controller: "intro",
+			// 	controllerJs: "./js/controller/intro.js",
+			// 	templateUrl: "./view/intro.html"
+			// },
 			"passage": {
 				name: "passage",
 				url: "/passage/:passageId",
@@ -197,26 +197,25 @@ mpw.factory("$request", [
 mpw.factory("$user", [
 	"$request",
 	"$session",
-	"$encrypt",
+	"$formatData",
 	"$location",
-	function($request, $session, $encrypt, $location) {
+	function($request, $session, $formatData, $location) {
 		var me = this;
 		var isLogged = false;
 		var nickname = "";
 		return {
-			login: function(data) {
+			login: function(formData) {
 
 				$request.query({
 					url: "./data/login.json",
-					data: data
+					data: $formatData(formData, "login")
 				}, function(data) {
 					nickname = data.nickname;
 					$session.set("pw", data);
-					$location.path("/blog");
 					isLogged = true;
-				}, function() {
+					$location.path("/blog");
+				}, function(data) {
 					isLogged = false;
-					console.log("login fail");
 				})
 			},
 			checkLogin: function() {
@@ -233,38 +232,43 @@ mpw.factory("$user", [
 					$location.path("/login");
 					return;
 				}
+				data.action = "checkLogin";
 				$request.query({
 					url: "./data/loginInfo.json",
-					action: "check",
 					async: false,
 					data: data
 				}, function(data) {
-					$location.path("/blog");
 					isLogged = true;
 					nickname = data.nickname;
+					$session.set("pw", data);
+					$location.path("/blog");
 				}, function() {
 					$location.path("/login");
 					isLogged = false;
-					console.log("false")
-						// error message
 				})
 			},
-			register: function(data) {
+			register: function(formData) {
 				$request.query({
 					url: "./data/register.json",
-					action: "register",
-					data: data
-				}, function() {
-					console.log("register succeed");
-				}, function() {
-					console.log("register fail");
+					data: $formatData(formData, "register")
+				}, function(data) {
+					nickname = data.nickname;
+					$session.set("pw", data);
+					isLogged = true;
+					$location.path("/blog");
+				}, function(data) {
+					isLogged = false;
 				})
 			},
 			logout: function() {
+				var uid = $session.get("pw").uid;
 				$session.destroy("pw");
 				$request.query({
 					url: "./data/logout.json",
-					action: "logout"
+					data: {
+						uid: uid,
+						action: "logout"
+					}
 				}, function() {
 					$location.path("/login");
 					isLogged = false;
@@ -277,7 +281,7 @@ mpw.factory("$user", [
 				return nickname;
 			},
 			getId: function() {
-				return $session.get("pw").uid;
+				return ""||$session.get("pw").uid;
 			}
 		};
 	}

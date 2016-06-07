@@ -1,41 +1,72 @@
 mpw.controller("login", ["$scope", "$user", function($scope, $user) {
-	$scope.someText = "login";
-	$scope.widgetConfig = {};
-	$scope.widgetConfig.username = {
-		label: "Login:",
-		readOnly: false,
-		data: "123",
-		disabled: false,
-		placeholder: "Please enter your username",
-		type: "text",
-		trim: true,
-		name: "username",
-		error: "Please enter corret username",
-		isValid: true,
-		maxLength: 20
+	$scope.isLogin = true;
+
+	$scope.widget = {
+		switchBtn: {},
+		loginForm: {},
+		registerForm: {}
 	};
-	$scope.widgetConfig.password = {
-		label: "Password:",
-		name: "password",
-		readOnly: false,
-		placeholder: "Please enter your password",
-		type: "password",
-		trim: true,
-		data: "",
-		error: "Please enter corret password",
-		isValid: true,
-		minLength: 2,
-		maxLength: 20
-	}
-	$scope.widgetConfig.button = {
-		text: "submit",
-		disabled: false,
+
+	$scope.widget.switchBtn = {
+		text: "Sign Up",
 		fn: function() {
-			$user.login({
-				username: $scope.widgetConfig.username.data,
-				password: $scope.widgetConfig.password.data,
-				action: "login"
-			})
+			if ($scope.isLogin) {
+				$scope.isLogin = false;
+				this.text = "Log In";
+				$scope.widget.registerForm.username.data = "";
+				$scope.widget.registerForm.password.data = "";
+				$scope.widget.registerForm.confirm.data = "";
+			} else {
+				$scope.isLogin = true;
+				this.text = "Sign Up";
+				$scope.widget.loginForm.username.data = "";
+				$scope.widget.loginForm.password.data = "";
+			}
+		}
+	}
+
+	$scope.widget.loginForm = {
+		username: {
+			placeholder: "Username",
+			name: "username",
+			data: ""
+		},
+		password: {
+			placeholder: "Password",
+			name: "password",
+			type: "password",
+			data: ""
+		},
+		loginBtn: {
+			text: "Log In",
+			fn: function() {
+				$user.login($scope.widget.loginForm)
+			}
+		}
+	}
+	$scope.widget.registerForm = {
+		username: {
+			placeholder: "Username",
+			name: "username",
+			data: ""
+		},
+		password: {
+			placeholder: "Password",
+			name: "password",
+			type: "password",
+			data: ""
+		},
+		confirm: {
+			placeholder: "Confirm Your Password",
+			name: "confirm",
+			type: "password",
+			data: ""
+		},
+		registerBtn: {
+			text: "Sign Up",
+			fn: function() {
+				$user.register($scope.widget.registerForm);
+			}
 		}
 	}
 }])

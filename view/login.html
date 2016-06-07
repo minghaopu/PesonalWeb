@@ -1,7 +1,24 @@
 <div id="login">
-	<form name="loginForm">
-		<div text-box config="widgetConfig.username"></div>
-		<div text-box config="widgetConfig.password"></div>
-		<div button config="widgetConfig.button"></div>
-	</form>
+	<section class="page-section control-section">
+		<div class="page-section-content">
+			<div button config="widget.switchBtn"></div>
+		</div>
+	</section>
+	<section class="page-section main-section">
+		<div class="page-section-content form-container"  ng-class="isLogin?'show-login':'hide-login'">
+			<form name="loginForm" class="login-form">
+				<div text-box config="widget.loginForm.username"></div>
+				<div text-box config="widget.loginForm.password"></div>
+				<div button config="widget.loginForm.loginBtn"></div>
+			</form>
+		</div>
+		<div class="page-section-content form-container"  ng-class="isLogin?'hide-register':'show-register'">
+			<form name="registerForm" class="register-form">
+				<div text-box config="widget.registerForm.username"></div>
+				<div text-box config="widget.registerForm.password"></div>
+				<div text-box config="widget.registerForm.confirm"></div>
+				<div button config="widget.registerForm.registerBtn"></div>
+			</form>
+		</div>
+	</section>
 </div>

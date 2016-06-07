@@ -35,7 +35,8 @@ mpw.directive("navigator", ["$module", "$location", "$user", "$timeout", functio
 				var navs = $module.getRoutes();
 				var timer;
 
-				scope.navs = [navs.intro, navs.blog, navs.resume];
+				// scope.navs = [navs.intro, navs.blog, navs.resume];
+				scope.navs = [navs.blog, navs.resume];
 				scope.isDropped = false;
 				scope.name = $user.getName();
 
@@ -129,9 +130,9 @@ mpw.directive("textBox", function() {
 		innerHTML +=		"<div class=\"widget-icon-container {{config.iconCls}}\">";
 		innerHTML +=			"<div class=\"widget-icon-content\"></div>";
 		innerHTML +=		"</div>";
-		innerHTML +=		"<div class=\"widget-lable-container {{config.labelCls}}\">";
-		innerHTML +=			"<div class=\"widget-lable-content\">";
-		innerHTML +=				"<span class=\"widget-lable-text\">{{config.label}}</span>";
+		innerHTML +=		"<div class=\"widget-label-container {{config.labelCls}}\">";
+		innerHTML +=			"<div class=\"widget-label-content\">";
+		innerHTML +=				"<span class=\"widget-label-text\">{{config.label}}</span>";
 		innerHTML +=			"</div>";
 		innerHTML +=		"</div>";
 		innerHTML +=		"<div class=\"widget-text-content {{config.inputCls}}\" ng-switch on=\"config.inputType\">";
@@ -150,7 +151,7 @@ mpw.directive("textBox", function() {
 		innerHTML +=					" class=\"widget-text-input\"";
 		innerHTML +=					" maxlength=\"{{config.maxLength}}\"";
 		innerHTML +=					" placeholder=\"{{config.placeholder}}\"";
-		innerHTML +=					" readonly=\"{{config.readOnly}}\"";
+		innerHTML +=					" ng-readonly=\"config.readOnly\"";
 		innerHTML +=					" ng-disabled=\"config.disabled\"";
 		innerHTML +=					" ng-trim=\"config.trim\"";
 		innerHTML +=					" ng-model=\"config.data\"></textarea>";
@@ -285,9 +286,9 @@ mpw.directive("file", ["$request", function($request) {
 		innerHTML +=		"<div class=\"widget-icon-container {{config.iconCls}}\">";
 		innerHTML +=			"<div class=\"widget-icon-content\"></div>";
 		innerHTML +=		"</div>";
-		innerHTML +=		"<div class=\"widget-lable-container {{config.labelCls}}\">";
-		innerHTML +=			"<div class=\"widget-lable-content\">";
-		innerHTML +=				"<span class=\"widget-lable-file\">{{config.label}}</span>";
+		innerHTML +=		"<div class=\"widget-label-container {{config.labelCls}}\"  ng-hide=\"config.isImg\">";
+		innerHTML +=			"<div class=\"widget-label-content\">";
+		innerHTML +=				"<span class=\"widget-label-file\">{{config.label}}</span>";
 		innerHTML +=			"</div>";
 		innerHTML +=		"</div>";
 		innerHTML +=		"<div class=\"widget-file-content {{config.inputCls}}\">";
@@ -296,7 +297,7 @@ mpw.directive("file", ["$request", function($request) {
 		innerHTML +=					" class=\"widget-file-input\"";
 		// innerHTML +=					" placeholder=\"{{config.placeholder}}\"";
 		innerHTML +=					" ng-disabled=\"config.disabled\"";
-		innerHTML +						" ng-model=\"data\">";
+		innerHTML +=					" ng-model=\"data\">";
 		innerHTML +=		"</div>";
 		innerHTML +=		"<div class=\"widget-error-container  {{config.errorCls}}\">";
 		innerHTML +=			"<div ng-hide=\"config.isValid\" class=\"widget-error-content\">";
@@ -305,7 +306,10 @@ mpw.directive("file", ["$request", function($request) {
 		innerHTML +=		"</div>";
 		innerHTML +=		"<div class=\"widget-preview-container\" ng-show=\"config.isImg\">";
 		innerHTML +=			"<div class=\"widget-preview-content\">";
-		innerHTML +=				"<img ng-src=\"{{filesrc}}\" alt=\"\" />";
+		innerHTML +=				"<img ng-src=\"{{config.src}}\" alt=\"\" ng-mouseover=\"showMask()\" ng-mouseleave=\"hideMask()\"/>";
+		innerHTML +=			"</div>";
+		innerHTML +=			"<div class=\"widget-preview-mask\" ng-show=\"maskVisible\" ng-mouseover=\"showMask()\" ng-mouseleave=\"hideMask()\"  ng-click=\"chooseFile()\">";
+		innerHTML +=				"<span>{{config.label}}</span>";
 		innerHTML +=			"</div>";
 		innerHTML +=		"</div>";
 		innerHTML +=		"<div button config=\"config.btn\"></div>";
@@ -341,6 +345,7 @@ mpw.directive("file", ["$request", function($request) {
 				}
 			}
 			$scope.config = angular.extend({}, defaultConfig, $scope.config);
+			$scope.maskVisible = false;
 
 			var input = $element.find("input");
 			input.bind("change", function(event) {
@@ -355,12 +360,21 @@ mpw.directive("file", ["$request", function($request) {
 					var reader = new FileReader();
 					reader.onload = function(loadEvent) {
 						$scope.$apply(function() {
-							$scope.filesrc = loadEvent.target.result;
+							$scope.config.src = loadEvent.target.result;
 						})
 					}
 					reader.readAsDataURL($scope.data);
 				}
 			});
+			$scope.showMask = function() {
+				$scope.maskVisible = true;
+			}
+			$scope.hideMask = function() {
+				$scope.maskVisible = false;
+			}
+			$scope.chooseFile = function() {
+				$element.find("input")[0].click();
+			}
 		}]
 		// ,
 		// link: function(scope, ele, attr) {
@@ -416,9 +430,9 @@ mpw.directive("display", function() {
 		innerHTML +=		"<div class=\"widget-icon-container {{config.iconCls}}\">";
 		innerHTML +=			"<div class=\"widget-icon-content\"></div>";
 		innerHTML +=		"</div>";
-		innerHTML +=		"<div class=\"widget-lable-container {{config.labelCls}}\">";
-		innerHTML +=			"<div class=\"widget-lable-content\">";
-		innerHTML +=				"<span class=\"widget-lable-display\">{{config.label}}</span>";
+		innerHTML +=		"<div class=\"widget-label-container {{config.labelCls}}\">";
+		innerHTML +=			"<div class=\"widget-label-content\">";
+		innerHTML +=				"<span class=\"widget-label-display\">{{config.label}}</span>";
 		innerHTML +=			"</div>";
 		innerHTML +=		"</div>";
 		innerHTML +=		"<div ng-switch-when=\"text\" class=\"widget-display-text-content\">";

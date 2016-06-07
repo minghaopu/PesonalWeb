@@ -81,15 +81,15 @@ div.widget-drop-content {
 	top: 22px;
 	right: 0px;
 	text-align: center;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
-    width: 100px;
-    background-color: #f3f3f3;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+	width: 100px;
+	background-color: #f3f3f3;
 }
 
 li.widget-drop-li {
-    padding: 5px;
+	padding: 5px;
 }
 li.widget-drop-li:first-child{
 	border-bottom: 1px solid #aaa;
@@ -139,4 +139,27 @@ div.widget-apps-container img{
 div.widget-file-wrapper div.widget-preview-container img{
 	width: 100px;
 	height: 100px;
+	cursor: pointer;
+}
+div.widget-file-wrapper div.widget-file-content input{
+	display: none;
+}
+div.widget-file-wrapper div.widget-preview-container {
+	position: relative;
+}
+div.widget-file-wrapper div.widget-preview-container div.widget-preview-mask {
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: rgba(240, 240, 240, 0.5);
+	width: 100px;
+	height: 100px;
+	cursor: pointer;
+	text-align: center;
+}
+div.widget-file-wrapper div.widget-preview-container div.widget-preview-mask span {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	margin-top: -25%;
 }

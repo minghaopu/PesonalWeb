@@ -3,9 +3,15 @@ mpw.controller("profile", ["$scope", "$timeout", "$request", "$formatData", func
 	$scope.widget = {
 		display: {},
 		changePwdForm: {},
-		updateForm: {}
+		updateForm: {},
+		portUpdate: {
+			name: "portrait",
+			isImg: true,
+			label: "Please choose a new photo",
+			url: "./data/changePortrait.json",
+			src: "",
+		},
 	};
-
 	var editFn = function() {
 		var me = this;
 		me.disabled = true;
@@ -21,7 +27,7 @@ mpw.controller("profile", ["$scope", "$timeout", "$request", "$formatData", func
 		$request.query({
 			url: "./data/changePwd.json",
 			method: "POST",
-			data: $formatData($scope.widget.changePwdForm, "changePwd");
+			data: $formatData($scope.widget.changePwdForm, "changePwd")
 		}, function() {
 			me.disabled = false;
 			// success msg
@@ -108,12 +114,6 @@ mpw.controller("profile", ["$scope", "$timeout", "$request", "$formatData", func
 			}
 		}
 		$scope.widget.updateForm = {
-			port: {
-				name: "portrait",
-				isImg: true,
-				label: "Please choose a new photo",
-				url: "./data/changePortrait.json"
-			},
 			nickname: {
 				label: "Nickname",
 				name: "nickname",
@@ -155,6 +155,7 @@ mpw.controller("profile", ["$scope", "$timeout", "$request", "$formatData", func
 				fn: updateProfile
 			}
 		}
+		$scope.widget.portUpdate.src = data.portrait
 		for (var prop in data.apps) {
 			$scope.widget.display.apps[prop] = {
 				label: data.apps[prop].name,
