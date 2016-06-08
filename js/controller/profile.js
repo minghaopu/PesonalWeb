@@ -133,22 +133,22 @@ mpw.controller("profile", ["$scope", "$timeout", "$request", "$formatData", func
 			facebook: {
 				label: "Facebook",
 				name: "facebook",
-				data: data.apps.facebook !== undefined?data.apps.facebook.href:""
+				data: data.apps.facebook || ""
 			},
 			twitter: {
 				label: "Twitter",
 				name: "twitter",
-				data: data.apps.twitter !== undefined?data.apps.twitter.href:""
+				data: data.apps.twitter || ""
 			},
 			linkedin: {
 				label: "LinkedIn",
 				name: "linkedin",
-				data: data.apps.linkedin !== undefined?data.apps.linkedin.href:""
+				data: data.apps.linkedin || ""
 			},
 			github: {
 				label: "Github",
 				name: "github",
-				data: data.apps.github !== undefined?data.apps.github.href:""
+				data: data.apps.github || ""
 			},
 			updateBtn: {
 				text: "Update Profile",
