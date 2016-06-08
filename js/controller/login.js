@@ -40,7 +40,16 @@ mpw.controller("login", ["$scope", "$user", function($scope, $user) {
 		loginBtn: {
 			text: "Log In",
 			fn: function() {
-				$user.login($scope.widget.loginForm)
+				$user.login($scope.widget.loginForm, function(data) {
+					var apps = data.apps;
+					for (var prop in apps) {
+						$scope.$parent.apps[prop] = {
+							name: prop,
+							href: (prop === "email" ? "mailto:" : "") + apps[prop],
+							src: "./img/icon/" + prop + ".png"
+						}
+					}
+				}, function() {})
 			}
 		}
 	}

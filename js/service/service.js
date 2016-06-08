@@ -204,8 +204,9 @@ mpw.factory("$user", [
 		var isLogged = false;
 		var nickname = "";
 		return {
-			login: function(formData) {
-
+			login: function(formData, success, failure) {
+				var successFn = success || function() {};
+				var failureFn = failure || function() {};
 				$request.query({
 					url: "./data/login.json",
 					data: $formatData(formData, "login")
@@ -213,12 +214,16 @@ mpw.factory("$user", [
 					nickname = data.nickname;
 					$session.set("pw", data);
 					isLogged = true;
+					successFn(data);
 					$location.path("/blog");
 				}, function(data) {
 					isLogged = false;
+					failureFn(data);
 				})
 			},
-			checkLogin: function() {
+			checkLogin: function(success, failure) {
+				var successFn = success || function() {};
+				var failureFn = failure || function() {};
 				if (!$session.checkSessionStorage()) {
 					// $location.path("/intro");
 					isLogged = false;
@@ -241,10 +246,12 @@ mpw.factory("$user", [
 					isLogged = true;
 					nickname = data.nickname;
 					$session.set("pw", data);
+					successFn(data);
 					$location.path("/blog");
 				}, function() {
-					$location.path("/login");
 					isLogged = false;
+					failureFn(data);
+					$location.path("/login");
 				})
 			},
 			register: function(formData) {
@@ -281,7 +288,7 @@ mpw.factory("$user", [
 				return nickname;
 			},
 			getId: function() {
-				return ""||$session.get("pw").uid;
+				return "" || $session.get("pw").uid;
 			}
 		};
 	}
@@ -379,7 +386,7 @@ mpw.factory("$formatData", ["$encrypt", function($encrypt) {
 			if (obj.data === undefined) continue;
 			if (obj.type !== undefined && obj.type === "password") {
 				formInput[obj.name] = $encrypt(obj.data);
-			}else{
+			} else {
 				formInput[obj.name] = obj.data;
 			}
 		}
