@@ -186,7 +186,7 @@ mpw.directive("textBox", function() {
 })
 
 mpw.directive("button", function() {
-	var innerHTML = 	"<div class=\"widget-button-container {{config.cls}}\" ng-class=\"config.disabled?'widget-button-disalbed':''\" ng-click=\"config.fn()\">";
+	var innerHTML = 	"<div class=\"widget-button-container {{config.cls}}\" ng-class=\"config.disabled?'widget-button-disalbed':''\" ng-click=\"config.fn()\" ng-show=\"config.isVisible\">";
 		innerHTML +=		"<div class=\"widget-icon-container\">";
 		innerHTML +=			"<div class=\"widget-icon-content {{config.iconCls}}\"></div>";
 		innerHTML +=		"</div>";
@@ -205,6 +205,7 @@ mpw.directive("button", function() {
 			var defaultConfig = {
 				text: "button",
 				disabled: false,
+				isVisible: true,
 				fn: function(){}
 			}
 			return function(scope, ele, attr) {
@@ -254,13 +255,13 @@ mpw.directive("list", ["$location", function($location) {
 }])
 
 mpw.directive("pdf", function() {
-	var innerHTML = 	"<div class=\"widget-pdf-container\" ng-switch on=\"config.isEmpty\">";
-		innerHTML +=		"<div class=\"widget-pdf-content\" ng-switch-when=\"false\">";
+	var innerHTML = 	"<div class=\"widget-pdf-container\">";
+		innerHTML +=		"<div class=\"widget-pdf-content\">";
 		innerHTML += 			"<iframe ng-src=\"{{config.url}}\" type=\"application/pdf\" ></iframe>";
 		innerHTML +=		"</div>";
-		innerHTML +=		"<div class=\"widget-pdf-empty-content\" ng-switch-when=\"true\">";
-		innerHTML +=			"<span class=\"widget-pdf-empty-text\">{{config.emptyMsg}}</span>";
-		innerHTML +=		"</div>";
+		// innerHTML +=		"<div class=\"widget-pdf-empty-content\" ng-switch-when=\"true\">";
+		// innerHTML +=			"<span class=\"widget-pdf-empty-text\">{{config.emptyMsg}}</span>";
+		// innerHTML +=		"</div>";
 		innerHTML += 	"</div>";
 	return {
 		restrict: "A",
@@ -272,7 +273,7 @@ mpw.directive("pdf", function() {
 		compile: function(ele, attr, trans) {
 			var defaultConfig = {
 				isEmpty: true,
-				emptyMsg: "You have not uploaded any resume"
+				url: ""
 			}
 			return function(scope, ele, attr) {
 				scope.config = angular.extend({}, defaultConfig, scope.config);
@@ -282,7 +283,7 @@ mpw.directive("pdf", function() {
 })
 
 mpw.directive("file", ["$request", function($request) {
-	var innerHTML = 	"<div class=\"widget-file-wrapper {{config.cls}}\">";
+	var innerHTML = 	"<div class=\"widget-file-wrapper {{config.cls}}\" ng-switch on=\"config.isImg\">";
 		innerHTML +=		"<div class=\"widget-icon-container {{config.iconCls}}\">";
 		innerHTML +=			"<div class=\"widget-icon-content\"></div>";
 		innerHTML +=		"</div>";
@@ -295,7 +296,6 @@ mpw.directive("file", ["$request", function($request) {
 		innerHTML +=			"<input type=\"file\"";
 		innerHTML +=					" name=\"{{config.name}}\"";
 		innerHTML +=					" class=\"widget-file-input\"";
-		// innerHTML +=					" placeholder=\"{{config.placeholder}}\"";
 		innerHTML +=					" ng-disabled=\"config.disabled\"";
 		innerHTML +=					" ng-model=\"data\">";
 		innerHTML +=		"</div>";
@@ -304,7 +304,8 @@ mpw.directive("file", ["$request", function($request) {
 		innerHTML +=				"<span class=\"widget-error-file\">{{config.error}}</span>";
 		innerHTML +=			"</div>";
 		innerHTML +=		"</div>";
-		innerHTML +=		"<div class=\"widget-preview-container\" ng-show=\"config.isImg\">";
+		innerHTML +=		"<div button config=\"config.chooseBtn\"></div>"
+		innerHTML +=		"<div class=\"widget-preview-container\" ng-switch-when=\"config.isImg\">";
 		innerHTML +=			"<div class=\"widget-preview-content\">";
 		innerHTML +=				"<img ng-src=\"{{config.src}}\" alt=\"\" ng-mouseover=\"showMask()\" ng-mouseleave=\"hideMask()\"/>";
 		innerHTML +=			"</div>";
@@ -312,7 +313,7 @@ mpw.directive("file", ["$request", function($request) {
 		innerHTML +=				"<span>{{config.label}}</span>";
 		innerHTML +=			"</div>";
 		innerHTML +=		"</div>";
-		innerHTML +=		"<div button config=\"config.btn\"></div>";
+		innerHTML +=		"<div button config=\"config.uploadBtn\"></div>";
 		innerHTML +=	"</div>";
 	return {
 		restrict: "A",
@@ -322,27 +323,49 @@ mpw.directive("file", ["$request", function($request) {
 			config: "="
 		},
 		controller: ["$scope", "$element", "$request", function($scope, $element, $request) {
+			$scope.showMask = function() {
+				$scope.maskVisible = true;
+			}
+			$scope.hideMask = function() {
+				$scope.maskVisible = false;
+			}
+			$scope.chooseFile = function() {
+				$element.find("input")[0].click();
+			}
 			var defaultConfig = {
 				// placeholder: "file",
 				disabled: false,
 				isValid: true,
 				isImg: false,
 				url: "./data/upload.json",
-				btn: {
+				chooseBtn: {
+					text: "Choose",
+					fn: $scope.chooseFile
+				},
+				uploadBtn: {
 					text: "Upload",
 					fn: function() {
-						console.log(this);
 						var data = new FormData();
 						data.append("file", $scope.data);
 						$request.query({
 							url: $scope.config.url,
 							data: data,
 							withCredentials: true,
-							headers: {"Content-Type": undefined },
+							headers: {
+								"Content-Type": undefined
+							},
 							transformRequest: angular.identity
+						},
+						function(data) {
+							$scope.config.successFn(data)
+						},
+						function(data) {
+							$scope.config.failureFn(data)
 						})
 					}
-				}
+				},
+				successFn: function() {},
+				failureFn: function() {}
 			}
 			$scope.config = angular.extend({}, defaultConfig, $scope.config);
 			$scope.maskVisible = false;
@@ -366,15 +389,7 @@ mpw.directive("file", ["$request", function($request) {
 					reader.readAsDataURL($scope.data);
 				}
 			});
-			$scope.showMask = function() {
-				$scope.maskVisible = true;
-			}
-			$scope.hideMask = function() {
-				$scope.maskVisible = false;
-			}
-			$scope.chooseFile = function() {
-				$element.find("input")[0].click();
-			}
+
 		}]
 		// ,
 		// link: function(scope, ele, attr) {
