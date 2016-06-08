@@ -158,8 +158,8 @@ mpw.controller("profile", ["$scope", "$timeout", "$request", "$formatData", func
 		$scope.widget.portUpdate.src = data.portrait
 		for (var prop in data.apps) {
 			$scope.widget.display.apps[prop] = {
-				label: data.apps[prop].name,
-				text: data.apps[prop].href
+				label: prop,
+				text: data.apps[prop]
 			}
 		}
 	}, function() {

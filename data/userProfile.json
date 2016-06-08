@@ -6,22 +6,10 @@
 		"bio": "I'm MinghaoPu",
 		"email": "nealpu@gwu.edu",
 		"apps": {
-			"linkedin": {
-				"name": "linkedin",
-				"href": "https://www.linkedin.com/in/minghao-pu-8914bb70"
-			},
-			"facebook": {
-				"name": "facebook",
-				"href": "https://www.facebook.com/roneil.pmh"
-			},
-			"github": {
-				"name": "github",
-				"href": "https://github.com/roneilPMH"
-			},
-			"twitter": {
-				"name": "twitter",
-				"href": "https://twitter.com/NealPu_MH"
-			}
+			"linkedin": "www.linkedin.com/in/MinghaoPu",
+			"facebook": "https://www.facebook.com/roneil.pmh",
+			"github": "https://github.com/roneilPMH",
+			"twitter": "https://twitter.com/NealPu_MH"
 		}
 	}
 }
