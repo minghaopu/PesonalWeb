@@ -1,4 +1,4 @@
-mpw.controller("blog", ["$scope", "$user", "$request", function($scope, $user, $request) {
+mpw.controller("blog", ["$scope", "$user", "$request", "$location", function($scope, $user, $request, $location) {
 	$scope.someText = "blog";
 	$scope.widget = {};
 	$scope.widget.blog = {
@@ -8,12 +8,17 @@ mpw.controller("blog", ["$scope", "$user", "$request", function($scope, $user, $
 	$request.query({
 		url: "./data/blog.json",
 		data: {
-			uid: $user.getId(),
-			action: "getBlog"
+			action: "getBlogIndex"
 		}
 	}, function(data) {
 		$scope.widget.blog.data = data;
 	}, function() {
 		$scope.widget.blog.data.length = 0;
 	})
+	$scope.widget.createBtn = {
+		text: "Write a new blog",
+		fn: function() {
+			$location.path("/edit/new");
+		}
+	}
 }])
