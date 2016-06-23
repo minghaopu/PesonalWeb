@@ -1,32 +1,12 @@
 <div id="edit">
-<text-angular ng-model="htmlVariable"></text-angular>
+	<section class="page-section">
+		<div class="page-section-content">
+			<form name="blogForm" class="page-section-form">
+				<div text-box config="widget.blogForm.title"></div>
+				<div editor config="widget.blogForm.editor"></div>
+				<div button config="widget.blogForm.submit"></div>
+				<div button config="widget.blogForm.cancel"></div>
+			</form>
+		</div>
+	</section>
 </div>
-
-<!-- <div class="widget-editor-container">
-	<div display-area config="config.data"></div>
-	<div button config="switch()"></div>
-	<div class="widget-editor-content">
-		<div ng-hide="config.isCode" text-editor config="config.text"></div>
-		<div ng-show="config.isCode" code-editor config="config.code"></div>
-	</div>
-</div>
-
-
-
-<div class="widget-text-editor-container">
-	<div class="widget-tool-container">
-		<ul class="widget-tool-list">
-			<li ng-repeat="btn in config.btns" ng-click="btn.fn()">
-				<div class="widget-tool-btn-container">
-					<div class="widget-tool-btn-content {{btn.cls}}">{{btn.name}}</div>
-				</div>
-			</li>
-		</ul>
-	</div>
-	<div class="widget-editor-content" contenteditable="true">
-	</div>
-</div>
-
-<div class="widget-code-container">
-	<textarea name="" class="widget-editor-input" wrap="off" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>
-</div> -->
