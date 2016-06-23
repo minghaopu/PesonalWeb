@@ -18,14 +18,14 @@ mpw.factory("$module", [
 				controllerJs: "./js/controller/login.js",
 				templateUrl: "./view/login.html"
 			},
-			// "intro": {
-			// 	name: "intro",
-			// 	url: "/intro",
-			// 	// url: "/:userNickName/passage/:passageId",
-			// 	controller: "intro",
-			// 	controllerJs: "./js/controller/intro.js",
-			// 	templateUrl: "./view/intro.html"
-			// },
+			"intro": {
+				name: "intro",
+				url: "/intro",
+				// url: "/:userNickName/passage/:passageId",
+				controller: "intro",
+				controllerJs: "./js/controller/intro.js",
+				templateUrl: "./view/intro.html"
+			},
 			"passage": {
 				name: "passage",
 				url: "/passage/:passageId",
@@ -63,6 +63,13 @@ mpw.factory("$module", [
 				controller: "profile",
 				controllerJs: "./js/controller/profile.js",
 				templateUrl: "./view/profile.html"
+			},
+			"edit": {
+				name: "edit",
+				url: "/edit/:passageId",
+				controller: "edit",
+				controllerJs: "./js/controller/edit.js",
+				templateUrl: "./view/edit.html"
 			}
 		};
 
@@ -390,7 +397,81 @@ mpw.factory("$formatData", ["$encrypt", function($encrypt) {
 				formInput[obj.name] = obj.data;
 			}
 		}
+		if (arguments[2] !== undefined) {
+			if (angular.isObject(arguments[2])) {
+				angular.extend(formInput, arguments[2]);
+			}
+		}
 		formData.data = formInput;
+
 		return formData;
 	};
 }])
+
+mpw.factory("$codeFormat", function() {
+	return function $codeFormat(code) {
+		var t = code;
+		var newCode = "";
+		if (code !== "") {
+			var codes = t.replace(/</g, "&lt").replace(/>/g, "&gt").replace(/\r/g, "").replace(/\n/g, "<br/>").replace(/    /g, "<div class=\"tab\"></div>").split("<br/>");
+			for (var i = 0; i < codes.length; i++) {
+				var line = codes[i].split(" ");
+				newCode += "<div class=\"code-line\">"+codes[i]+"</div>";
+			}
+		}
+		return newCode;
+		// for (var i = 0; i < codes.length; i++) {
+		// 	newCode += "<p>"+codes[i]+"</p>";
+		// }
+
+		// newCode = "<div>" + newCode + "</div>";
+		// return newCode;
+	};
+})
+mpw.decorator('taOptions', ['taRegisterTool', '$delegate', 'taSelection', '$compile', function(taRegisterTool, taOptions, taSelection, $compile) {
+	// $delegate is the taOptions we are decorating
+	// register the tool with textAngular
+	taRegisterTool('insertCode', {
+		iconclass: "code",
+		buttontext: "insertCode",
+		action: function() {
+			// console.log(this.$editor().getSelection())
+
+			var editor = this.$editor().$parent;
+
+			editor.isCode = true;
+			editor.insertCode.isVisible = true;
+
+			var id = "code-area-" + editor.codeIndex;
+
+			// var html = "<code id=\"" + id + "\" class=\"code-area\">{{codes[" + editor.codeIndex + "]}}</code>";
+			var html = "<code id=\"" + id + "\" class=\"code-area\">Click to Edit Code</code>";
+			taSelection.insertHtml("<p><br></p>"+html+"<p><br></p>");
+			var code = angular.element(document.getElementById(id));
+			
+			$compile(code)(editor);
+			// code.on("click", function(event) {
+
+			// 	event.bubbles = false;
+			// 	event.preventDefault();
+			// 	event.stopPropagation();
+			// 	event.stopImmediatePropagation();
+			// 	editor.isCode = true;
+			// 	editor.insertCode.isVisible = true;
+			// 	editor.current = parseInt(code[0].id.split("-")[2]);
+			// 	editor.config.code.data = editor.codes[editor.current];
+			// 	editor.$apply();
+			// })
+			// code.on("mouseover", function() {
+			// 	editor.isPreview = true;
+			// 	editor.current = parseInt(code[0].id.split("-")[2]);
+			// 	editor.config.code.data = editor.codes[editor.current];
+			// 	editor.$apply();
+			// })
+
+		}
+	});
+	// add the button to the default toolbar definition
+	taOptions.toolbar[1].push('insertCode');
+	return taOptions;
+}]);
