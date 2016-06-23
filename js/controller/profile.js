@@ -23,7 +23,7 @@ mpw.controller("profile", ["$scope", "$timeout", "$request", "$formatData", func
 
 	var changePwd = function() {
 		var me = this;
-		this.disabled = true;
+		me.disabled = true;
 		$request.query({
 			url: "./data/changePwd.json",
 			method: "POST",
@@ -39,7 +39,7 @@ mpw.controller("profile", ["$scope", "$timeout", "$request", "$formatData", func
 
 	var updateProfile = function() {
 		var me = this;
-		this.disabled = true;
+		me.disabled = true;
 		$request.query({
 			url: "./data/updateProfile.json",
 			method: "POST",
@@ -61,7 +61,7 @@ mpw.controller("profile", ["$scope", "$timeout", "$request", "$formatData", func
 		$scope.widget.display = {
 			editBtn: {
 				text: "Edit",
-				disabled: false,
+				isVisible: true,
 				fn: editFn
 			},
 			portrait: {

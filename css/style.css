@@ -52,8 +52,9 @@ div.main-wrapper footer {
 }
 div.main-wrapper footer p {
 	color: #ffffff;
-	font-weight: bolder;
-	font-size: 0.8em;
+/*	font-weight: bolder;
+*/	font-size: 0.8em;
+	margin: 0 !important;
 }
 
 div.widget-display-wrapper img.portrait{
@@ -123,3 +124,5 @@ div#login section.main-section div.form-container.hide-register{
 	-webkit-transition: right 2s; /* Safari 和 Chrome */
 	-o-transition: right 2s;
 }
+
+/*service*/

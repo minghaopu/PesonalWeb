@@ -2,11 +2,10 @@ mpw.controller("index", [
 	"$scope",
 	"$module",
 	"$request",
-	"$encrypt",
 	"$user",
 	"$message",
 	"$location",
-	function($scope, $module, $request, $encrypt, $user, $message, $location) {
+	function($scope, $module, $request, $user, $message, $location) {
 
 		$scope.isLogged = false;
 		// $scope.apps = [{

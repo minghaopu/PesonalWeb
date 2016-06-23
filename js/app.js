@@ -16,11 +16,10 @@ mpw.config([
 		mpw.filter = $filterProvider;
 		mpw.factory = $provide.factory;
 		mpw.service = $provide.service;
+		mpw.decorator = $provide.decorator;
 
 	}
 ]).run(["$module", "$user", "$rootScope", function($module, $user, $rootScope) {
-	
-	
 	$rootScope.pageTitle = $user.nickname || "MPW"; //need to change with url
 
 }])

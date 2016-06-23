@@ -15,7 +15,6 @@ mpw.controller("resume", ["$scope", "$request", "$window", "$route", function($s
 				$scope.widget.openBtn.isVisible = true;
 				$scope.widget.upload.label = "";
 				$scope.widget.upload.chooseBtn.text = "Choose a new one";
-
 			},
 			failureFn: function(data) {
 				$scope.hasResume = false;
