@@ -1,4 +1,4 @@
-mpw.controller("login", ["$scope", "$user", function($scope, $user) {
+mpw.controller("login", ["$scope", "$user", "$message", function($scope, $user, $message) {
 	$scope.isLogin = true;
 
 	$scope.widget = {
@@ -40,6 +40,8 @@ mpw.controller("login", ["$scope", "$user", function($scope, $user) {
 		loginBtn: {
 			text: "Log In",
 			fn: function() {
+				var me = this;
+				me.disabled = true;
 				$user.login($scope.widget.loginForm, function(data) {
 					var apps = data.apps;
 					for (var prop in apps) {
@@ -49,7 +51,19 @@ mpw.controller("login", ["$scope", "$user", function($scope, $user) {
 							src: "./img/icon/" + prop + ".png"
 						}
 					}
-				}, function() {})
+				}, function() {
+					$message.show({
+						title: "Login",
+						text: "Login failed!",
+						button: [{
+							text: "OK",
+							fn: function() {
+								$message.hide();
+								me.disabled = false;
+							}
+						}]
+					})
+				})
 			}
 		}
 	}

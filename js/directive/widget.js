@@ -69,20 +69,18 @@ mpw.directive("message", ["$message", function($message) {
 	var innerHTML = 	"<div class=\"widget-msg-wrapper\" ng-show=\"isVisible\">";
 		innerHTML += 		"<div class=\"widget-msg-container\">";
 		innerHTML += 			"<div class=\"widget-msg-title\">";
-		innerHTML += 				"<div class=\"widget-msg-icon-container\">"
-		innerHTML += 					"<img ng-src=\"{{msg.titleIcon}}\" class=\"widget-msg-icon\">"
+		innerHTML += 				"<div class=\"widget-msg-icon-container\">";
+		innerHTML += 					"<img ng-src=\"{{msg.titleIcon}}\" class=\"widget-msg-icon\" alt=\"\">";
 		innerHTML += 				"</div>";
-		innerHTML += 			"<div class=\"widget-msg-title-text\">{{msg.title}}</div>";
-		innerHTML += 		"</div>";
-		innerHTML += 		"<div class=\"widget-msg-content-container\">";
-		innerHTML += 			"<div class=\"widget-msg-content\">{{msg.text}}</div>";
-		innerHTML += 				"<div class=\"widget-msg-btn-container\" ng-show=\"msg.hasBtn\">";
-		innerHTML += 					"<div button ng-repeat=\"btn in msg.button\" config={{btn}}></div>";
-		// innerHTML += 					"<button id=\"msg-no-btn\" class=\"msg-no-btn\" btn-config=\"msg.noBtn\"></button>";
-		innerHTML += 				"</div>";
+		innerHTML += 				"<div class=\"widget-msg-title-text\">{{msg.title}}</div>";
+		innerHTML += 			"</div>";
+		innerHTML += 			"<div class=\"widget-msg-content-container\">";
+		innerHTML += 				"<div class=\"widget-msg-content\">{{msg.text}}</div>";
+		innerHTML += 			"</div>";
+		innerHTML += 			"<div class=\"widget-msg-btn-container\" ng-show=\"msg.hasBtn\">";
+		innerHTML += 				"<div button ng-repeat=\"btn in msg.button\" config=btn></div>";
 		innerHTML += 			"</div>";
 		innerHTML += 		"</div>";
-		innerHTML += 		"<div class=\"widget-msg-mask-layer\"></div>";
 		innerHTML += 	"</div>";
 	return {
 		restrict: "A",

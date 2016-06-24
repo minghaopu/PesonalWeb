@@ -1,3 +1,6 @@
+html, body {
+	height: 100%;
+}
 body#mpw {
 	background-image: url(../img/background.jpg);
 	background-position: center center;
@@ -13,6 +16,7 @@ body#mpw.logged{
 
 div.main-wrapper{
 	position: relative;
+	height: 100%;
 }
 
 body#mpw div.main-wrapper a {
@@ -32,7 +36,9 @@ div.main-wrapper header {
 	background-color: rgba(0,0,0,0.6);
 	z-index: 98;
 }
-
+div.main-container {
+	height: 100%;
+}
 
 div.main-wrapper main {
 	margin: 40px 10% 0px 10%;
@@ -41,6 +47,7 @@ div.main-wrapper main {
 
 div.main-content {
 	padding: 40px 40px 40px 40px;
+	height: 100%;
 }
 
 div.main-wrapper footer {
@@ -74,7 +81,7 @@ div.widget-display-wrapper img.portrait{
 
 /* Login page */
 div#login {
-	text-align: center;
+	margin-top: 15%;
 }
 div#login section.control-section{
 	position: absolute;

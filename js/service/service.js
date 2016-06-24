@@ -319,9 +319,9 @@ mpw.factory("$util", ["", function() {
 mpw.factory("$message", function() {
 	var isVisible = false;
 	var defaultConfig = {
-		title: "testing",
+		title: "title",
 		titleIcon: "./img/error.png",
-		text: "testing",
+		text: "content",
 		hasBtn: true,
 		button: [{
 			text: "OK",
@@ -339,7 +339,7 @@ mpw.factory("$message", function() {
 	return {
 		show: function() {
 			if (arguments[0]) {
-				config = angular.extend({}, defaultConfig, options);
+				config = angular.extend({}, defaultConfig, arguments[0]);
 			} else {
 				config = defaultConfig;
 			}

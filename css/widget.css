@@ -29,25 +29,51 @@ div.widget-tool-container ul li div img {
 
 */
 /*Message*/
-div.widget-msg-mask-layer {
+div.widget-msg-wrapper {
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background-color: #eeeeee;
-	opacity: 0.8;
+	background-color: rgba(255,255,255,0.5);
 	z-index: 99;
 }
+
 div.widget-msg-container {
 	position: absolute;
-	width: 20%;
-	height: 20%;
 	top: 40%;
-	left: 40%;
+	left: 50%;
+	width: 300px;
+	min-height: 217px;
+	margin: -150px;
 	z-index: 100;
+	background: #ffffff;
+	border: 1px solid rgba(150, 150, 150, 0.5);
+	border-radius: 5px;
+	box-shadow: 6px 6px 6px rgba(150, 150, 150, 0.7)
 }
-
+div.widget-msg-title {
+	padding: 10px
+}
+div.widget-msg-content-container {
+	padding: 10px;
+	min-height: 100px;
+	border-bottom: 1px solid rgba(200,200,200,0.5);
+	border-top: 1px solid rgba(200,200,200,0.5);
+}
+div.widget-msg-title div{
+	display: inline-block;
+}
+div.widget-msg-btn-container {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	text-align: center;
+	padding: 10px;
+}
+div.widget-msg-btn-container div {
+	display: inline-block;
+}
 /*navigator*/
 div.widget-nav-container {
 	position: relative;
@@ -185,15 +211,15 @@ div.widget-code-display code {
 }
 div.widget-code-editor-container div.widget-code-index {
 	cursor: default;
-    position: absolute;
-    left: -41px;
-    top: 0px;
-    font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
-    background-color: rgb(240, 240, 240);
-    padding: 0 10px 0 10px;
-    border: 1px solid rgba(160,160,160,0.8);
-    border-right: none;
-    min-height: 400px;
+	position: absolute;
+	left: -41px;
+	top: 0px;
+	font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
+	background-color: rgb(240, 240, 240);
+	padding: 0 10px 0 10px;
+	border: 1px solid rgba(160,160,160,0.8);
+	border-right: none;
+	min-height: 400px;
 }
 div.widget-code-editor-container div.widget-code-display {
 	z-index: 1;
@@ -277,11 +303,11 @@ div.widget-dynamic-container div.code-line-container{
 }
 div.code-line-container div.code-line-index {
 	position: absolute;
-    top: 0;
-    height: 100%;
-    left: 0;
-    background-color: rgb(240, 240, 240);
-    width: 40px;
+	top: 0;
+	height: 100%;
+	left: 0;
+	background-color: rgb(240, 240, 240);
+	width: 40px;
 }
 div.code-line-container div.code-line {
 	margin-left: 40px;
@@ -295,9 +321,9 @@ div.code-line-index {
 
 div.code-line {
 	font-size: 14px;
-    white-space: normal;
-    cursor: text;
-    min-height: 20px;
+	white-space: normal;
+	cursor: text;
+	min-height: 20px;
 }
 div.code-line span {
 	display: inline-block;
@@ -315,12 +341,12 @@ div.code-line span.code-word-key {
 div.code-line span.code-word-tab {
 	width: 33.60625px;
 	height: 20px;
-    vertical-align: bottom;
+	vertical-align: bottom;
 }
 div.code-line span.code-word-space {
 	width: 8.4015625px;
 	height: 20px;
-    vertical-align: bottom;
+	vertical-align: bottom;
 }
 
 
@@ -334,4 +360,33 @@ div.widget-editor-container div.widget-preview-mask {
 	left: 0;
 	width: 100%;
 	height: 100%;
+}
+
+/*button*/
+div.widget-button-container {
+	display: inline-block;
+	background: rgb(251,251,251);
+	min-width: 100px;
+	height: 30px;
+	padding: 3px;
+	margin: 10px;
+	border: 1px solid rgba(150, 150, 150, 0.5);
+	border-radius: 4px;
+	cursor: pointer;
+}
+div.widget-button-container div.widget-button-content {
+	height: 22px;
+	width: 100%;
+    cursor: pointer;
+}
+div.widget-button-container button {
+	font-weight: 500;
+    width: 100%;
+    height: 22px;
+    border: none;
+    padding: 0;
+    background: transparent;
+}
+button:focus{
+	border: none;
 }
