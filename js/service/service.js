@@ -18,14 +18,14 @@ mpw.factory("$module", [
 				controllerJs: "./js/controller/login.js",
 				templateUrl: "./view/login.html"
 			},
-			"intro": {
-				name: "intro",
-				url: "/intro",
-				// url: "/:userNickName/passage/:passageId",
-				controller: "intro",
-				controllerJs: "./js/controller/intro.js",
-				templateUrl: "./view/intro.html"
-			},
+			// "intro": {
+			// 	name: "intro",
+			// 	url: "/intro",
+			// 	// url: "/:userNickName/passage/:passageId",
+			// 	controller: "intro",
+			// 	controllerJs: "./js/controller/intro.js",
+			// 	templateUrl: "./view/intro.html"
+			// },
 			"passage": {
 				name: "passage",
 				url: "/passage/:passageId",
@@ -156,7 +156,8 @@ mpw.factory("$module", [
 mpw.factory("$request", [
 	"$http",
 	"$q",
-	function($http, $q) {
+	"$message",
+	function($http, $q, $message) {
 		var defaultConfig = {
 			url: null,
 			async: true,
@@ -164,6 +165,7 @@ mpw.factory("$request", [
 		};
 		return {
 			query: function(options, success, failure, error) {
+				$message.showLoading();
 				var config = angular.extend({}, defaultConfig, options);
 				var successFn = success || function() {};
 				var failureFn = failure || function() {};
@@ -172,11 +174,14 @@ mpw.factory("$request", [
 				if (config.async) {
 					$http(config).success(function(data, status, headers, config) {
 						if (data.success) {
+							$message.hideLoading();
 							successFn(data.data, status, headers, config);
 						} else {
 							failureFn(data.error, status, headers, config);
 						}
-					}).error(errorFn);
+					}).error(function(){
+						errorFn(arguments)
+					});
 				} else {
 					var promise = (function() {
 						var deferred = $q.defer();
@@ -189,6 +194,7 @@ mpw.factory("$request", [
 					})();
 					promise.then(function(data) {
 						if (data.success) {
+							$message.hideLoading();
 							successFn(data.data);
 						} else {
 							failureFn(data.error);
@@ -227,6 +233,7 @@ mpw.factory("$user", [
 					isLogged = false;
 					failureFn(data);
 				})
+
 			},
 			checkLogin: function(success, failure) {
 				var successFn = success || function() {};
@@ -316,8 +323,9 @@ mpw.factory("$util", ["", function() {
 	};
 }])
 
-mpw.factory("$message", function() {
+mpw.factory("$message", ["$timeout", function($timeout) {
 	var isVisible = false;
+	var isLoading = false;
 	var defaultConfig = {
 		title: "title",
 		titleIcon: "./img/error.png",
@@ -336,6 +344,9 @@ mpw.factory("$message", function() {
 		}]
 	};
 	var config = null;
+	var mask = angular.element(document.getElementById("mask-layer"));
+	var loading = angular.element(document.getElementById("loading"));
+	var msg = angular.element(document.getElementById("message"));
 	return {
 		show: function() {
 			if (arguments[0]) {
@@ -343,9 +354,20 @@ mpw.factory("$message", function() {
 			} else {
 				config = defaultConfig;
 			}
-			isVisible = true;
+			if (isLoading) {
+				setTimeout(function() {
+					loading.addClass("hide");
+				}, 1000)
+				$timeout(function() {
+					isVisible = true;
+				}, 1500)
+			}else {
+				mask.addClass("show");
+				isVisible = true;
+			}
 		},
 		hide: function() {
+			mask.removeClass("show");
 			isVisible = false;
 			config = null;
 		},
@@ -355,9 +377,23 @@ mpw.factory("$message", function() {
 		},
 		getStatus: function() {
 			return isVisible;
+		},
+		showLoading: function() {
+			isLoading = true;
+			mask.addClass("show");
+			loading.removeClass("hide");
+			// loading.addClass("show");
+		},
+		hideLoading: function() {
+			isLoading = false;
+			// loading.removeClass("show");
+			loading.addClass("hide");
+			setTimeout(function() {
+				mask.removeClass("show");
+			}, 500);
 		}
 	};
-})
+}])
 mpw.factory("$session", function() {
 	return {
 		checkSessionStorage: function() {
@@ -416,7 +452,7 @@ mpw.factory("$codeFormat", function() {
 			var codes = t.replace(/</g, "&lt").replace(/>/g, "&gt").replace(/\r/g, "").replace(/\n/g, "<br/>").replace(/    /g, "<div class=\"tab\"></div>").split("<br/>");
 			for (var i = 0; i < codes.length; i++) {
 				var line = codes[i].split(" ");
-				newCode += "<div class=\"code-line\">"+codes[i]+"</div>";
+				newCode += "<div class=\"code-line\">" + codes[i] + "</div>";
 			}
 		}
 		return newCode;
@@ -446,9 +482,9 @@ mpw.decorator('taOptions', ['taRegisterTool', '$delegate', 'taSelection', '$comp
 
 			// var html = "<code id=\"" + id + "\" class=\"code-area\">{{codes[" + editor.codeIndex + "]}}</code>";
 			var html = "<code id=\"" + id + "\" class=\"code-area\">Click to Edit Code</code>";
-			taSelection.insertHtml("<p><br></p>"+html+"<p><br></p>");
+			taSelection.insertHtml("<p><br></p>" + html + "<p><br></p>");
 			var code = angular.element(document.getElementById(id));
-			
+
 			$compile(code)(editor);
 			// code.on("click", function(event) {
 

@@ -29,6 +29,12 @@ mpw.controller("passage", ["$scope", "$routeParams", "$request", "$location", fu
 
 				})
 			}
+		},
+		back: {
+			text: "Back",
+			fn: function() {
+				$location.path("/blog");
+			}
 		}
 	}
 	$request.query({

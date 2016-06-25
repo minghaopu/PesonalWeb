@@ -35,8 +35,8 @@ mpw.directive("navigator", ["$module", "$location", "$user", "$timeout", functio
 				var navs = $module.getRoutes();
 				var timer;
 
-				scope.navs = [navs.intro, navs.blog, navs.resume];
-				// scope.navs = [navs.blog, navs.resume];
+				// scope.navs = [navs.intro, navs.blog, navs.resume];
+				scope.navs = [navs.blog, navs.resume];
 				scope.isDropped = false;
 				scope.name = $user.getName();
 
@@ -66,8 +66,9 @@ mpw.directive("navigator", ["$module", "$location", "$user", "$timeout", functio
 }]);
 
 mpw.directive("message", ["$message", function($message) {
-	var innerHTML = 	"<div class=\"widget-msg-wrapper\" ng-show=\"isVisible\">";
-		innerHTML += 		"<div class=\"widget-msg-container\">";
+	// var innerHTML = 	"<div class=\"widget-msg-wrapper\" ng-show=\"isVisible\">";
+	var innerHTML = 	"<div class=\"widget-msg-container\" ng-show=\"isVisible\">";
+		// innerHTML += 		"<div class=\"widget-msg-container\">";
 		innerHTML += 			"<div class=\"widget-msg-title\">";
 		innerHTML += 				"<div class=\"widget-msg-icon-container\">";
 		innerHTML += 					"<img ng-src=\"{{msg.titleIcon}}\" class=\"widget-msg-icon\" alt=\"\">";
@@ -80,7 +81,7 @@ mpw.directive("message", ["$message", function($message) {
 		innerHTML += 			"<div class=\"widget-msg-btn-container\" ng-show=\"msg.hasBtn\">";
 		innerHTML += 				"<div button ng-repeat=\"btn in msg.button\" config=btn></div>";
 		innerHTML += 			"</div>";
-		innerHTML += 		"</div>";
+		// innerHTML += 		"</div>";
 		innerHTML += 	"</div>";
 	return {
 		restrict: "A",
@@ -184,14 +185,14 @@ mpw.directive("textBox", function() {
 })
 
 mpw.directive("button", function() {
-	var innerHTML = "<div class=\"widget-button-container {{config.cls}}\" ng-class=\"config.disabled?'widget-button-disalbed':''\" ng-click=\"config.fn()\" ng-show=\"config.isVisible\">";
-		innerHTML += "<div class=\"widget-icon-container\">";
-		innerHTML += "<div class=\"widget-icon-content {{config.iconCls}}\"></div>";
-		innerHTML += "</div>";
-		innerHTML += "<div class=\"widget-button-content\">";
-		innerHTML += "<button class=\"widget-button-btn {{config.btnCls}}\" ng-disabled=\"config.disabled\">{{config.text}}</button>";
-		innerHTML += "</div>";
-		innerHTML += "</div>";
+	var innerHTML = 	"<div class=\"widget-button-container {{config.cls}}\" ng-class=\"config.disabled?'widget-button-disalbed':''\" ng-click=\"config.fn()\" ng-show=\"config.isVisible\">";
+		// innerHTML += 		"<div class=\"widget-icon-container\">";
+		// innerHTML += 			"<div class=\"widget-icon-content {{config.iconCls}}\"></div>";
+		// innerHTML += 		"</div>";
+		innerHTML += 		"<div class=\"widget-button-content\">";
+		innerHTML += 			"<button class=\"widget-button-btn {{config.btnCls}}\" ng-disabled=\"config.disabled\">{{config.text}}</button>";
+		innerHTML +=		"</div>";
+		innerHTML += 	"</div>";
 	return {
 		restrict: "A",
 		replace: true,
@@ -209,7 +210,10 @@ mpw.directive("button", function() {
 			return function(scope, ele, attr) {
 				scope.config = angular.extend({}, defaultConfig, scope.config);
 				ele.on("click", function() {
-					ele[0].focus();
+					ele.addClass("focus");
+				})
+				ele.on("blur", function() {
+					ele.removeClass("focus");
 				})
 			}
 		}
@@ -1500,9 +1504,19 @@ mpw.directive("editor", ["$compile", function($compile) {
 
 // })
 
-// mpw.directive("loading", function() {
-
-// });
+mpw.directive("loading", ["$message", function($message) {
+	var innerHTML = 	"<div class=\"widget-loading-container\">";
+		innerHTML += 		"<div class=\"widget-loading-content\">";
+		innerHTML += 			"<div class=\"widget-loading\"></div>";
+		innerHTML += 		"</div>";
+		innerHTML += 	"</div>";
+	return {
+		template: innerHTML,
+		scope: false,
+		restrict: "A",
+		replace: false
+	}
+}]);
 // mpw.directive("editor", function() {
 
 // })
