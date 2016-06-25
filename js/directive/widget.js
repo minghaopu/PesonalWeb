@@ -73,7 +73,7 @@ mpw.directive("message", ["$message", function($message) {
 		innerHTML += 				"<div class=\"widget-msg-icon-container\">";
 		innerHTML += 					"<img ng-src=\"{{msg.titleIcon}}\" class=\"widget-msg-icon\" alt=\"\">";
 		innerHTML += 				"</div>";
-		innerHTML += 				"<div class=\"widget-msg-title-text\">{{msg.title}}</div>";
+		innerHTML += 				"<div class=\"widget-msg-title-text\"><span>{{msg.title}}</span></div>";
 		innerHTML += 			"</div>";
 		innerHTML += 			"<div class=\"widget-msg-content-container\">";
 		innerHTML += 				"<div class=\"widget-msg-content\">{{msg.text}}</div>";
@@ -209,10 +209,16 @@ mpw.directive("button", function() {
 			}
 			return function(scope, ele, attr) {
 				scope.config = angular.extend({}, defaultConfig, scope.config);
-				ele.on("click", function() {
+				ele.on("mousedown", function(event) {
+					event.preventDefault();
+					event.stopPropagation();
+					event.stopImmediatePropagation();
 					ele.addClass("focus");
 				})
-				ele.on("blur", function() {
+				ele.on("mouseup", function(event) {
+					event.preventDefault();
+					event.stopPropagation();
+					event.stopImmediatePropagation();
 					ele.removeClass("focus");
 				})
 			}
@@ -221,21 +227,21 @@ mpw.directive("button", function() {
 })
 
 mpw.directive("list", ["$location", function($location) {
-	var innerHTML = "<div class=\"widget-list-container\">";
-	innerHTML += "<div class=\"widget-list-content\" ng-hide=\"config.data.length > 0 ? false : true\">";
-	innerHTML += "<ul class=\"widget-list-ul\">";
-	innerHTML += "<li ng-repeat=\"row in config.data\" class=\"widget-list-row row-{{$index}}\">";
-	innerHTML += "<div class=\"widget-row-title\" ng-click=\"viewPassage(row)\">";
-	innerHTML += "<a href=\"javascript:void(0)\" class=\"widget-row-link\">{{row.title}}</a>"
-	innerHTML += "</div>";
-	innerHTML += "<div class=\"widget-row-time\">{{row.posttime}}</div>";
-	innerHTML += "</li>";
-	innerHTML += "</ul>";
-	innerHTML += "</div>";
-	innerHTML += "<div class=\"widget-list-empty-content\" ng-show=\"config.data.length > 0 ? false : true\">";
-	innerHTML += "<span class=\"widget-list-empty-text\">{{config.emptyText}}</span>";
-	innerHTML += "</div>";
-	innerHTML += "</div>";
+	var innerHTML = 	"<div class=\"widget-list-container\">";
+		innerHTML += 		"<div class=\"widget-list-content\" ng-hide=\"config.data.length > 0 ? false : true\">";
+		innerHTML += 			"<ul class=\"widget-list-ul\">";
+		innerHTML += 				"<li ng-repeat=\"row in config.data\" class=\"widget-list-row row-{{$index}}\">";
+		innerHTML += 					"<div class=\"widget-row-title\" ng-click=\"viewPassage(row)\">";
+		innerHTML += 						"<a href=\"javascript:void(0)\" class=\"widget-row-link\">{{row.title}}</a>"
+		innerHTML += 					"</div>";
+		innerHTML += 					"<div class=\"widget-row-time\">{{row.posttime}}</div>";
+		innerHTML += 				"</li>";
+		innerHTML += 			"</ul>";
+		innerHTML += 		"</div>";
+		innerHTML += 		"<div class=\"widget-list-empty-content\" ng-show=\"config.data.length > 0 ? false : true\">";
+		innerHTML += 			"<span class=\"widget-list-empty-text\">{{config.emptyText}}</span>";
+		innerHTML += 		"</div>";
+		innerHTML += 	"</div>";
 	return {
 		restrict: "A",
 		replace: true,
@@ -245,7 +251,7 @@ mpw.directive("list", ["$location", function($location) {
 		},
 		compile: function(ele, attr, trans) {
 			var defaultConfig = {
-				emptyText: "No blog!",
+				emptyText: "You haven't write any blog yet!",
 				data: []
 			}
 			return function(scope, ele, attr) {
@@ -1462,6 +1468,8 @@ mpw.directive("editor", ["$compile", function($compile) {
 				var html = "";
 				var str = "";
 				var code = null;
+
+
 				for (var i = 0, j = 0; i < text.length; i++) {
 					if (text[i] === all[j]) {
 						$scope.config.text.data += text[i];
@@ -1479,14 +1487,19 @@ mpw.directive("editor", ["$compile", function($compile) {
 				}
 			}
 
-			var loadListerner = $scope.$watch(function() {
-				return $scope.config.data
-			}, function(newVal, oldVal) {
-				if (newVal !== "" && oldVal === "") {
-					formatloadData();
-					loadListerner();
-				}
-			})
+			if (!$scope.config.isnew) {
+				var loadListerner = $scope.$watch(function() {
+					return $scope.config.data
+				}, function(newVal, oldVal) {
+					if (newVal !== "" && oldVal === "") {
+						formatloadData();
+						loadListerner();
+					}
+				})
+			}
+
+
+
 			angular.element(document.querySelector("div[id^=taTextElemen]")).on("click", function(event) {
 
 				if (event.target.tagName === "CODE") {
@@ -1504,7 +1517,7 @@ mpw.directive("editor", ["$compile", function($compile) {
 
 // })
 
-mpw.directive("loading", ["$message", function($message) {
+mpw.directive("loading", function() {
 	var innerHTML = 	"<div class=\"widget-loading-container\">";
 		innerHTML += 		"<div class=\"widget-loading-content\">";
 		innerHTML += 			"<div class=\"widget-loading\"></div>";
@@ -1516,7 +1529,7 @@ mpw.directive("loading", ["$message", function($message) {
 		restrict: "A",
 		replace: false
 	}
-}]);
+});
 // mpw.directive("editor", function() {
 
 // })

@@ -38,8 +38,6 @@ div.loading {
 	margin-top: -51px;
 	margin-left: -51px;
 	z-index: 100;
-	border-radius: 5px;
-	box-shadow: 6px 6px 6px rgba(150, 150, 150, 0.7);
 	opacity: 1;
 	visibility: visible;
 }
@@ -188,8 +186,18 @@ div.widget-msg-container {
 }
 
 div.widget-msg-title {
-	padding: 10px
+	padding: 10px;
 }
+div.widget-msg-title div.widget-msg-icon-container {
+	margin-right: 10px;
+	height: 25px;
+	width: 25px;
+}
+div.widget-msg-title img {
+	width: 25px;
+	height: 25px;
+}
+
 div.widget-msg-content-container {
 	padding: 10px;
 	min-height: 100px;
@@ -198,6 +206,11 @@ div.widget-msg-content-container {
 }
 div.widget-msg-title div{
 	display: inline-block;
+	height: 25px;
+}
+div.widget-msg-title span{
+	vertical-align: middle;
+	line-height: 25px;
 }
 div.widget-msg-btn-container {
 	position: absolute;
@@ -544,4 +557,9 @@ div.widget-button-container button {
 }
 div.widget-button-container button:focus{
 	outline: none;
+}
+
+/*textbox*/
+div.widget-text-wrapper {
+	margin: 10px;
 }
