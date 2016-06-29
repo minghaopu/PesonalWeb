@@ -3,7 +3,7 @@
 	 *	Database Configuration
 	 */
 	define("DB_HOST","myblogdb.cmkg8ehh61rx.us-west-2.rds.amazonaws.com");
-	define("DB_USER","roneil_PMH");
+	define("DB_USER","root");
 	define("DB_PASSWORD","0conceit_PMH");
 	define("DB_NAME","minghaodb");
 	define("DB_CHARSET","utf8");
