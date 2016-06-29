@@ -2,7 +2,7 @@
 	/*
 	 *	Database Configuration
 	 */
-	define("DB_HOST","http://50.112.16.154/");
+	define("DB_HOST","myblogdb.cmkg8ehh61rx.us-west-2.rds.amazonaws.com");
 	define("DB_USER","roneil_PMH");
 	define("DB_PASSWORD","0conceit_PMH");
 	define("DB_NAME","minghaodb");
