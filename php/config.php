@@ -2,9 +2,9 @@
 	/*
 	 *	Database Configuration
 	 */
-	define("DB_HOST","localhost");
-	define("DB_USER","root");
-	define("DB_PASSWORD","0conceit");
+	define("DB_HOST","http://50.112.16.154/");
+	define("DB_USER","roneil_PMH");
+	define("DB_PASSWORD","0conceit_PMH");
 	define("DB_NAME","minghaodb");
 	define("DB_CHARSET","utf8");
 	define("DB_PORT", "3306");

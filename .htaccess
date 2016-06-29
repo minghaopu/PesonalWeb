@@ -3,7 +3,7 @@ Options FollowSymlinks
 RewriteEngine on
 
 
-RewriteCond %{REQUEST_URI} /php/([a-zA-Z1-9]{1,})$
+RewriteCond %{REQUEST_URI} ^/php/([a-zA-Z1-9]{1,})$
 RewriteRule (.*)$ /php/index.php [L]
 
 
