@@ -1,3 +1,3 @@
-mpw.controller("intro", ["$scope", "$module", "$user", function($scope, $module, $user) {
+mpw.controller("intro", ["$scope", "$module", "$users", function($scope, $module, $users) {
 
 }])

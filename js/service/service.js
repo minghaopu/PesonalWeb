@@ -1,19 +1,51 @@
 // var mpwService = angular.module("mpwService", ["ngRoute", "ngTouch"]);
+mpw.factory("$users", function() {
+
+	var isLogged = false;
+	var nickname = null;
+	var uid = null;
+	return {
+
+
+		getStatus: function() {
+			return isLogged;
+		},
+		getName: function() {
+			return nickname;
+		},
+		getId: function() {
+			return uid;
+		},
+		setStatus: function(value) {
+			console.log(this)
+			isLogged = value;
+		},
+		setName: function(value) {
+			nickname = value;
+		},
+		setId: function(value) {
+			uid = value;
+		}
+
+	};
+
+})
 mpw.factory("$module", [
 	"$route",
 	"$rootScope",
-	"$user",
+	"$users",
 	"$location",
-	function($route, $rootScope, $user, $location) {
+	function($route, $rootScope, $users, $location) {
 
 		var currentModule = "";
 		var history = [];
+
 
 		var routes = {
 			"login": {
 				name: "login",
 				url: "/login",
-				// url: "/:userNickName/passage/:passageId",
+				// url: "/:userNickName/passage/:blogId",
 				controller: "login",
 				controllerJs: "./js/controller/login.js",
 				templateUrl: "./view/login.html"
@@ -21,22 +53,22 @@ mpw.factory("$module", [
 			// "intro": {
 			// 	name: "intro",
 			// 	url: "/intro",
-			// 	// url: "/:userNickName/passage/:passageId",
+			// 	// url: "/:userNickName/passage/:blogId",
 			// 	controller: "intro",
 			// 	controllerJs: "./js/controller/intro.js",
 			// 	templateUrl: "./view/intro.html"
 			// },
 			"passage": {
 				name: "passage",
-				url: "/passage/:passageId",
-				// url: "/:userNickName/passage/:passageId",
+				url: "/:nickname/passage/:blogId",
+				// url: "/:userNickName/passage/:blogId",
 				controller: "passage",
 				controllerJs: "./js/controller/passage.js",
 				templateUrl: "./view/passage.html"
 			},
 			"blog": {
 				name: "blog",
-				url: "/blog",
+				url: "/:nickname/blog",
 				//url: "/:userNickName/blog",
 				controller: "blog",
 				controllerJs: "./js/controller/blog.js",
@@ -44,7 +76,7 @@ mpw.factory("$module", [
 			},
 			"resume": {
 				name: "resume",
-				url: "/resume",
+				url: "/:nickname/resume",
 				//url: "/:userNickName/resume",
 				controller: "resume",
 				controllerJs: "./js/controller/resume.js",
@@ -52,21 +84,21 @@ mpw.factory("$module", [
 			},
 			"error": {
 				name: "error",
-				url: "/error",
+				url: "/error/",
 				controller: "error",
 				controllerJs: "./js/controller/error.js",
 				templateUrl: "./view/error.html"
 			},
 			"profile": {
 				name: "profile",
-				url: "/profile",
+				url: "/:nickname/profile",
 				controller: "profile",
 				controllerJs: "./js/controller/profile.js",
 				templateUrl: "./view/profile.html"
 			},
 			"edit": {
 				name: "edit",
-				url: "/edit/:passageId",
+				url: "/edit/:blogId",
 				controller: "edit",
 				controllerJs: "./js/controller/edit.js",
 				templateUrl: "./view/edit.html"
@@ -86,7 +118,7 @@ mpw.factory("$module", [
 		};
 
 		return {
-			history: ["intro"],
+			// history: ["intro"],
 			init: function() {
 				var route, controllerJs;
 
@@ -100,7 +132,7 @@ mpw.factory("$module", [
 				}
 
 				mpw.routeProvider.otherwise({
-					redirectTo: "/error"
+					redirectTo: "/error/"
 				});
 
 
@@ -157,7 +189,10 @@ mpw.factory("$request", [
 	"$http",
 	"$q",
 	"$message",
-	function($http, $q, $message) {
+	"$error",
+	"$location",
+	"$users",
+	function($http, $q, $message, $error, $location, $users) {
 		var defaultConfig = {
 			url: null,
 			async: true,
@@ -169,18 +204,47 @@ mpw.factory("$request", [
 				var config = angular.extend({}, defaultConfig, options);
 				var successFn = success || function() {};
 				var failureFn = failure || function() {};
-				var errorFn = error || function() {};
+				// var errorFn = error || function() {};
 
 				if (config.async) {
-					$http(config).success(function(data, status, headers, config) {
-						if (data.success) {
+					$http(config).success(function(response, status, headers, config) {
+						if (response.success) {
 							$message.hideLoading();
-							successFn(data.data, status, headers, config);
+							successFn(response.data, status, headers, config);
 						} else {
-							failureFn(data.error, status, headers, config);
+							if (response.error.errorcode === -1) {
+								$message.hideLoading();
+								$message.hide();
+								$users.setStatus(false);
+								$users.setId(null);
+								$users.setName(null);
+								$location.path("/login");
+							} else {
+								$message.show({
+									title: "Error",
+									text: $error(status),
+									button: [{
+										text: "OK",
+										fn: function() {
+											$message.hide();
+										}
+									}]
+								})
+								failureFn(response.error, status, headers, config);
+							}
 						}
-					}).error(function(){
-						errorFn(arguments)
+					}).error(function(response, status, headers, config) {
+						$message.show({
+								title: "Error",
+								text: $error(status),
+								button: [{
+									text: "OK",
+									fn: function() {
+										$message.hide();
+									}
+								}]
+							})
+							// errorFn(arguments)
 					});
 				} else {
 					var promise = (function() {
@@ -197,7 +261,16 @@ mpw.factory("$request", [
 							$message.hideLoading();
 							successFn(data.data);
 						} else {
-							failureFn(data.error);
+							if (data.error.errorcode === -1) {
+								$message.hideLoading();
+								$message.hide();
+								$users.setStatus(false);
+								$users.setId(null);
+								$users.setName(null);
+								$location.path("/login");
+							} else {
+								failureFn(data.error);
+							}
 						}
 					}, function(data) {
 						errorFn(data);
@@ -207,106 +280,7 @@ mpw.factory("$request", [
 		}
 	}
 ])
-mpw.factory("$user", [
-	"$request",
-	"$session",
-	"$formatData",
-	"$location",
-	function($request, $session, $formatData, $location) {
-		var me = this;
-		var isLogged = false;
-		var nickname = "";
-		return {
-			login: function(formData, success, failure) {
-				var successFn = success || function() {};
-				var failureFn = failure || function() {};
-				$request.query({
-					url: "./data/login.json",
-					data: $formatData(formData, "login")
-				}, function(data) {
-					nickname = data.nickname;
-					$session.set("pw", data);
-					isLogged = true;
-					successFn(data);
-					$location.path("/blog");
-				}, function(data) {
-					isLogged = false;
-					failureFn(data);
-				})
 
-			},
-			checkLogin: function(success, failure) {
-				var successFn = success || function() {};
-				var failureFn = failure || function() {};
-				if (!$session.checkSessionStorage()) {
-					// $location.path("/intro");
-					isLogged = false;
-					$location.path("/login");
-					return;
-				}
-				var data = $session.get("pw");
-				if (!angular.isObject(data)) {
-					// $location.path("/intro");
-					isLogged = false;
-					$location.path("/login");
-					return;
-				}
-				data.action = "checkLogin";
-				$request.query({
-					url: "./data/loginInfo.json",
-					async: false,
-					data: data
-				}, function(data) {
-					isLogged = true;
-					nickname = data.nickname;
-					$session.set("pw", data);
-					successFn(data);
-					$location.path("/blog");
-				}, function() {
-					isLogged = false;
-					failureFn(data);
-					$location.path("/login");
-				})
-			},
-			register: function(formData) {
-				$request.query({
-					url: "./data/register.json",
-					data: $formatData(formData, "register")
-				}, function(data) {
-					nickname = data.nickname;
-					$session.set("pw", data);
-					isLogged = true;
-					$location.path("/blog");
-				}, function(data) {
-					isLogged = false;
-				})
-			},
-			logout: function() {
-				var uid = $session.get("pw").uid;
-				$session.destroy("pw");
-				$request.query({
-					url: "./data/logout.json",
-					data: {
-						uid: uid,
-						action: "logout"
-					}
-				}, function() {
-					$location.path("/login");
-					isLogged = false;
-				})
-			},
-			getStatus: function() {
-				return isLogged;
-			},
-			getName: function() {
-				return nickname;
-			},
-			getId: function() {
-				return "" || $session.get("pw").uid;
-			}
-		};
-	}
-])
 
 mpw.factory("$encrypt", function() {
 	var defaultConfig = "MD5";
@@ -317,107 +291,111 @@ mpw.factory("$encrypt", function() {
 	};
 });
 
-mpw.factory("$util", ["", function() {
-	return function $util() {
+// mpw.factory("$util", ["", function() {
+// 	return function $util() {
 
-	};
-}])
+// 	};
+// }])
 
 mpw.factory("$message", ["$timeout", function($timeout) {
-	var isVisible = false;
-	var isLoading = false;
-	var defaultConfig = {
-		title: "title",
-		titleIcon: "./img/error.png",
-		text: "content",
-		hasBtn: true,
-		button: [{
-			text: "OK",
-			cls: "",
-			iconCls: "",
-			fn: function() {}
-		}, {
-			text: "NO",
-			cls: "",
-			iconCls: "",
-			fn: function() {}
-		}]
-	};
-	var config = null;
-	var mask = angular.element(document.getElementById("mask-layer"));
-	var loading = angular.element(document.getElementById("loading"));
-	var msg = angular.element(document.getElementById("message"));
-	return {
-		show: function() {
-			if (arguments[0]) {
-				config = angular.extend({}, defaultConfig, arguments[0]);
-			} else {
-				config = defaultConfig;
-			}
-			if (isLoading) {
-				setTimeout(function() {
-					loading.addClass("hide");
-				}, 1000)
-				$timeout(function() {
+		var isVisible = false;
+		var isLoading = false;
+		var defaultConfig = {
+			title: "title",
+			titleIcon: "./img/error.png",
+			text: "content",
+			hasBtn: true,
+			button: [{
+				text: "OK",
+				cls: "",
+				iconCls: "",
+				fn: function() {}
+			}, {
+				text: "NO",
+				cls: "",
+				iconCls: "",
+				fn: function() {}
+			}]
+		};
+		var config = null;
+		var mask = angular.element(document.getElementById("mask-layer"));
+		var loading = angular.element(document.getElementById("loading"));
+		var msg = angular.element(document.getElementById("message"));
+		var timer;
+		var me = this;
+		return {
+			show: function() {
+				if (isVisible) {
+					me.hide();
+				}
+				if (arguments[0]) {
+					config = angular.extend({}, defaultConfig, arguments[0]);
+				} else {
+					config = defaultConfig;
+				}
+				if (isLoading) {
+					setTimeout(function() {
+						loading.addClass("hide");
+					}, 1000)
+					$timeout(function() {
+						isVisible = true;
+					}, 1500)
+				} else {
+					mask.addClass("show");
 					isVisible = true;
-				}, 1500)
-			}else {
-				mask.addClass("show");
-				isVisible = true;
-			}
-		},
-		hide: function() {
-			mask.removeClass("show");
-			isVisible = false;
-			config = null;
-		},
-		getConfig: function() {
-			if (config === null) return defaultConfig
-			return config;
-		},
-		getStatus: function() {
-			return isVisible;
-		},
-		showLoading: function() {
-			isLoading = true;
-			mask.addClass("show");
-			loading.removeClass("hide");
-			// loading.addClass("show");
-		},
-		hideLoading: function() {
-			isLoading = false;
-			// loading.removeClass("show");
-			loading.addClass("hide");
-			setTimeout(function() {
+				}
+			},
+			hide: function() {
 				mask.removeClass("show");
-			}, 500);
-		}
-	};
-}])
-mpw.factory("$session", function() {
-	return {
-		checkSessionStorage: function() {
-			if (!localStorage) {
-				return false;
+				isVisible = false;
+				config = null;
+			},
+			getConfig: function() {
+				if (config === null) return defaultConfig
+				return config;
+			},
+			getStatus: function() {
+				return isVisible;
+			},
+			showLoading: function() {
+				isLoading = true;
+				mask.addClass("show");
+				loading.removeClass("hide");
+			},
+			hideLoading: function() {
+				isLoading = false;
+				// loading.removeClass("show");
+				loading.addClass("hide");
+				setTimeout(function() {
+					mask.removeClass("show");
+				}, 500);
 			}
-			return true
-		},
-		set: function(key, value) {
-			return localStorage.setItem(key, JSON.stringify(value));
-		},
-		get: function(key) {
-			return JSON.parse(localStorage.getItem(key));
-		},
-		destroy: function(key) {
-			return localStorage.removeItem(key);
-		}
-	};
-})
-mpw.factory("$validation", function() {
-	return {
+		};
+	}])
+	// mpw.factory("$session", function() {
+	// 	return {
+	// 		checkSessionStorage: function() {
+	// 			if (!localStorage) {
+	// 				return false;
+	// 			}
+	// 			return true
+	// 		},
+	// 		set: function(key, value) {
+	// 			return localStorage.setItem(key, JSON.stringify(value));
+	// 		},
+	// 		get: function(key) {
+	// 			return JSON.parse(localStorage.getItem(key));
+	// 		},
+	// 		destroy: function(key) {
+	// 			return localStorage.removeItem(key);
+	// 		}
+	// 	};
+	// })
+	// mpw.factory("$validation", function() {
+	// 	return {
 
-	};
-})
+// 	};
+// })
 mpw.factory("$formatData", ["$encrypt", function($encrypt) {
 	return function $formatData(form, action) {
 		var formData = {
@@ -444,24 +422,43 @@ mpw.factory("$formatData", ["$encrypt", function($encrypt) {
 	};
 }])
 
-mpw.factory("$codeFormat", function() {
-	return function $codeFormat(code) {
-		var t = code;
-		var newCode = "";
-		if (code !== "") {
-			var codes = t.replace(/</g, "&lt").replace(/>/g, "&gt").replace(/\r/g, "").replace(/\n/g, "<br/>").replace(/    /g, "<div class=\"tab\"></div>").split("<br/>");
-			for (var i = 0; i < codes.length; i++) {
-				var line = codes[i].split(" ");
-				newCode += "<div class=\"code-line\">" + codes[i] + "</div>";
-			}
-		}
-		return newCode;
-		// for (var i = 0; i < codes.length; i++) {
-		// 	newCode += "<p>"+codes[i]+"</p>";
-		// }
+// mpw.factory("$codeFormat", function() {
+// 	return function $codeFormat(code) {
+// 		var t = code;
+// 		var newCode = "";
+// 		if (code !== "") {
+// 			var codes = t.replace(/</g, "&lt").replace(/>/g, "&gt").replace(/\r/g, "").replace(/\n/g, "<br/>").replace(/    /g, "<div class=\"tab\"></div>").split("<br/>");
+// 			for (var i = 0; i < codes.length; i++) {
+// 				var line = codes[i].split(" ");
+// 				newCode += "<div class=\"code-line\">" + codes[i] + "</div>";
+// 			}
+// 		}
+// 		return newCode;
+// 		// for (var i = 0; i < codes.length; i++) {
+// 		// 	newCode += "<p>"+codes[i]+"</p>";
+// 		// }
 
-		// newCode = "<div>" + newCode + "</div>";
-		// return newCode;
+// 		// newCode = "<div>" + newCode + "</div>";
+// 		// return newCode;
+// 	};
+// })
+
+mpw.factory("$error", function() {
+	return function $error(errorcode) {
+		switch (errorcode) {
+			case 0:
+				return "Your username or password is wrong!";
+			case 1:
+				return "You have entered the wrong username or password too many times! Please try again later!";
+			case 2:
+				return "Your username has been used! Please choose another one!";
+			case 3:
+				return "The passwords you entered are not match.";
+			case 4:
+				return "The file you are trying to upload are more than 5MB. Please choose another one.";
+			default:
+				return "Network Error!";
+		}
 	};
 })
 mpw.decorator('taOptions', ['taRegisterTool', '$delegate', 'taSelection', '$compile', function(taRegisterTool, taOptions, taSelection, $compile) {
@@ -485,7 +482,7 @@ mpw.decorator('taOptions', ['taRegisterTool', '$delegate', 'taSelection', '$comp
 			taSelection.insertHtml("<p><br></p>" + html + "<p><br></p>");
 			var code = angular.element(document.getElementById(id));
 
-			$compile(code)(editor);
+			$compile(code);
 			// code.on("click", function(event) {
 
 			// 	event.bubbles = false;

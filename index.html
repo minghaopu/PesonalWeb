@@ -1,7 +1,8 @@
 <!doctype html>
-<html ng-app="mpw">
+<html ng-app="mpw" xmlns="http://www.w3.org/1999/xhtml" manifest="">
 
 <head>
+	<base href="/">
 	<!-- <meta charset="utf-8"> -->
 
 	<link rel='stylesheet' href='./lib/textAngular/dist/textAngular.css'>
@@ -15,7 +16,7 @@
 	<link rel='stylesheet' href='./lib/textAngular/dist/textAngular.css'>
 	<link rel="stylesheet" href="./css/style.css">
 	<link rel="stylesheet" href="./css/widget.css">
-	<base href="/PesonalWeb/">
+	
 	<title ng-bind="pageTitle"></title>
 
 </head>
@@ -23,13 +24,13 @@
 
 	<div class="main-wrapper" ng-switch-when="true">
 		<header>
-			<div navigator></div>
+			<div navigator config="nav"></div>
 		</header>
 		<main class="main-container">
 			<div ng-view class="main-content"></div>
 		</main>
 		<footer>
-			<div app-link></div>
+			<div app-link config="apps"></div>
 			<div id="copyright" class="text-container copyright-container">
 				<p class="text copyright-content">{{copyright}}</p>
 			</div>

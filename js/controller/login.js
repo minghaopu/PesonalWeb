@@ -1,4 +1,4 @@
-mpw.controller("login", ["$scope", "$user", "$message", function($scope, $user, $message) {
+mpw.controller("login", ["$scope", "$users", "$message", "$error", "$request", "$formatData", "$location", function($scope, $users, $message, $error, $request, $formatData, $location) {
 	$scope.isLogin = true;
 
 	$scope.widget = {
@@ -14,6 +14,7 @@ mpw.controller("login", ["$scope", "$user", "$message", function($scope, $user, 
 				$scope.isLogin = false;
 				this.text = "Log In";
 				$scope.widget.registerForm.username.data = "";
+				$scope.widget.registerForm.nickname.data = "";
 				$scope.widget.registerForm.password.data = "";
 				$scope.widget.registerForm.confirm.data = "";
 			} else {
@@ -42,35 +43,46 @@ mpw.controller("login", ["$scope", "$user", "$message", function($scope, $user, 
 			fn: function() {
 				var me = this;
 				me.disabled = true;
-				$user.login($scope.widget.loginForm, function(data) {
+
+				$request.query({
+					// url: "./data/login.json",
+					url: "./php/user",
+					data: $formatData($scope.widget.loginForm, "login")
+				}, function(data) {
+					$users.setStatus(true);
+					$users.setId(data.uid);
+					$users.setName(data.nickname);
+
+					$scope.$parent.nav.nickname = data.nickname;
 					var apps = data.apps;
 					for (var prop in apps) {
-						$scope.$parent.apps[prop] = {
+						$scope.$parent.apps.data[prop] = {
 							name: prop,
 							href: (prop === "email" ? "mailto:" : "") + apps[prop],
 							src: "./img/icon/" + prop + ".png"
 						}
 					}
-				}, function() {
-					$message.show({
-						title: "Login",
-						text: "Login failed!",
-						button: [{
-							text: "OK",
-							fn: function() {
-								$message.hide();
-								me.disabled = false;
-							}
-						}]
-					})
+					$location.path("/" + data.nickname + "/blog");
+				}, function(data) {
+					me.disabled = false;
 				})
+				// $users.login(, function(data) {
+
+				// }, function(error) {
+					
+				// })
 			}
 		}
 	}
 	$scope.widget.registerForm = {
 		username: {
-			placeholder: "Username",
+			placeholder: "Username for login",
 			name: "username",
+			data: ""
+		},
+		nickname: {
+			placeholder: "Nickname",
+			name: "nickname",
 			data: ""
 		},
 		password: {
@@ -88,8 +100,49 @@ mpw.controller("login", ["$scope", "$user", "$message", function($scope, $user, 
 		registerBtn: {
 			text: "Sign Up",
 			fn: function() {
-				$user.register($scope.widget.registerForm);
+				var me = this;
+				me.disabled = true;
+				if ($scope.widget.registerForm.password.data !== $scope.widget.registerForm.confirm.data) {
+					$message.show({
+						title: "Error",
+						text: $error(3),
+						button: [{
+							text: "OK",
+							fn: function() {
+								$message.hide();
+								me.disabled = false;
+							}
+						}]
+					})
+					return 0;
+				}
+
+				$request.query({
+					url: "./php/user",
+					data: $formatData($scope.widget.registerForm, "register")
+				}, function(data) {
+					$users.setStatus(true);
+					$users.setId(data.uid);
+					$users.setName(data.nickname);
+
+					$scope.$parent.nav.nickname = data.nickname;
+					var apps = data.apps;
+					for (var prop in apps) {
+						$scope.$parent.apps.data[prop] = {
+							name: prop,
+							href: (prop === "email" ? "mailto:" : "") + apps[prop],
+							src: "./img/icon/" + prop + ".png"
+						}
+					}
+					$location.path("/" + data.nickname + "/blog");
+
+				}, function() {
+					me.disabled = false;
+				})
 			}
 		}
 	}
+	// var checkPassword = function(pwd, cfm) {
+	// 	if ()
+	// }
 }])

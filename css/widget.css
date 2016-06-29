@@ -282,6 +282,46 @@ li.widget-drop-li a {
 li.widget-drop-li a:hover {
 	background-color: rgb(230, 230, 230);
 }
+div.widget-nav-container div.widget-search-container {
+	display: inline-block;
+    position: absolute;
+    top: -3px;
+    right: 66px;
+    border-radius: 13px;
+    overflow: hidden;
+}
+
+div.widget-nav-container input.widget-search-input {
+	outline: none;
+    border: none;
+    height: 26px;
+    padding-left: 13px;
+}
+div.widget-nav-container button.widget-search-button {
+	width: 40px;
+	height: 26px;
+	padding: 0 10px 0 10px;
+	position: absolute;
+    right: 0;
+    top: 0;
+    background-color: #fff;
+    border: none;
+}
+
+div.widget-nav-container button.widget-search-button:focus {
+	outline: none;
+    background-color: rgb(150,150,150);
+}
+
+div.widget-nav-container button.widget-search-button i {
+	width: 20px;
+	height: 26px;
+	background: url(../img/search.png) no-repeat;
+	background-position: center center;
+	background-size: contain;
+	display: inline-block;
+	vertical-align: middle;
+}
 
 /*pdf*/
 
@@ -325,7 +365,7 @@ div.widget-file-wrapper div.widget-preview-container img{
 	height: 100px;
 	cursor: pointer;
 }
-div.widget-file-wrapper div.widget-file-content input{
+div.widget-file-wrapper div.widget-file-content input.widget-file-input{
 	display: none;
 }
 div.widget-file-wrapper div.widget-preview-container {

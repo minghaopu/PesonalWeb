@@ -2,12 +2,19 @@ mpw.controller("index", [
 	"$scope",
 	"$module",
 	"$request",
-	"$user",
+	"$users",
 	"$message",
 	"$location",
-	function($scope, $module, $request, $user, $message, $location) {
-
+	"$http",
+	function($scope, $module, $request, $users, $message, $location, $http) {
+		var initrequest = "";
+		var urlseg = $location.path().split('/');
+		if (urlseg.length === 2 || (urlseg.length === 3 && urlseg[2].toLowerCase() === "blog")) {
+			initrequest = urlseg[1].toLowerCase();
+		}
 		$scope.isLogged = false;
+
+		// $scope.isLogged = false;
 		// $scope.apps = [{
 		// 	name: "linkedin",
 		// 	href: "https://www.linkedin.com/in/minghao-pu-8914bb70",
@@ -29,33 +36,71 @@ mpw.controller("index", [
 		// 	href: "mailto:nealpu@gwu.edu",
 		// 	src: "./img/icon/email.png",
 		// }];
-		$scope.apps = {};
+		$scope.apps = {
+			data: {}
+		};
 		var current = new Date();
 		$scope.copyright = "\u00A9" + " " + current.getFullYear() + " " + "MINGHAO PU ALLRIGHTS RESERVERED";
 
 		$module.init();
-		$user.checkLogin(function(data) {
+		$scope.nav = {
+			navs: [],
+			nickname: ""
+		}
+
+		$request.query({
+			// url: "./data/loginInfo.json",
+			url: "./php/user",
+			async: false,
+			data: {
+				action: "check",
+				data: {}
+			}
+		}, function(data) {
+
+			$users.setStatus(true);
+			$users.setId(data.uid);
+			$users.setName(data.nickname);
+
+			$scope.nav = {
+				navs: [{
+					name: "My Blog",
+					url: "/" + data.nickname + "/blog"
+				}, {
+					name: "My Resume",
+					url: "/" + data.nickname + "/resume"
+				}],
+				nickname: data.nickname
+			};
 			var apps = data.apps;
 			for (var prop in apps) {
-				$scope.apps[prop] = {
+				$scope.apps.data[prop] = {
 					name: prop,
 					href: (prop === "email" ? "mailto:" : "") + apps[prop],
 					src: "./img/icon/" + prop + ".png"
 				}
 			}
-		}, function() {
-
-		});
-		// $scope.isLogged = $user.checkLogin();
-
-		$scope.$watch(function() {
-			return $user.getStatus();
-		}, function(newVal, oldVal) {
-			$scope.isLogged = newVal;
+			if (initrequest !== "") {
+				$location.path("/" + initrequest + "/blog");
+			} else {
+				initrequest = "";
+				$location.path("/" + $users.getName() + "/blog");
+			}
 		})
 
-		// $scope.$on("$routeChangeSuccess", function(e, next, current) {
-		// 	$scope.isLogged = next.controller === "login" ? false : true;
-		// });
+		$scope.$watch(function() {
+			return $users.getStatus();
+		}, function(newValue, oldValue) {
+			if (newValue === true) {
+				$scope.pageTitle = $users.getName();
+				$scope.isLogged = true;
+			} else {
+				$scope.$root.pageTitle = "Personal Web";
+				$scope.isLogged = false;
+				$users.setStatus(false);
+				$users.setId(null);
+				$users.setName(null);
+			}
+		})
 	}
 ])

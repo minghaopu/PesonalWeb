@@ -1,11 +1,21 @@
-<div id="blog">
-	<section class="page-section">
+<div id="blog" ng-switch on="isUser">
+	<section class="page-section sidebar"  ng-switch-when="true">
 		<div class="page-section-content">
 			<div button config="widget.createBtn"></div>
 		</div>
+	</section>
+	<section class="page-section sidebar" ng-switch-when="false">
+		<div class="page-section-content">
+			<div display config="widget.portrait"></div>
+			<div display config="widget.author"></div>
+			<div display config="widget.bio"></div>
+			<div app-link config="widget.apps"></div>
+			<div button config="widget.resumeBtn"></div>
+		</div>
+	</section>
+	<section class="page-section">
 		<div class="page-section-content">
 			<div list config="widget.blog"></div>
 		</div>
 	</section>
-	
 </div>

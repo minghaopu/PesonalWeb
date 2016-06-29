@@ -1,19 +1,78 @@
-mpw.controller("blog", ["$scope", "$user", "$request", "$location", function($scope, $user, $request, $location) {
-	$scope.someText = "blog";
-	$scope.widget = {};
+mpw.controller("blog", ["$scope", "$users", "$request", "$location", "$routeParams", function($scope, $users, $request, $location, $routeParams) {
+	var requestData = {
+		action: "getIndex",
+		data: {}
+	};
+	$scope.widget = {
+		author: {
+			type: "text",
+			text: ""
+		},
+		bio: {
+			type: "text",
+			text: ""
+		},
+		portrait: {
+			type: "img",
+			text: "portrait",
+			imgSrc: "",
+			imgCls: "portrait"
+		},
+		apps: {
+			data: {}
+		},
+		resumeBtn: {
+			text: "Check " + $routeParams.nickname + "'s Resume",
+			fn: function() {
+				$location.path("/" + $routeParams.nickname + "/resume");
+			}
+		}
+	};
+	if ($routeParams.nickname === $users.getName()) {
+		$scope.isUser = true;
+		requestData.data.isUser = true;
+	} else {
+		$scope.isUser = false;
+		requestData.data.isUser = false;
+		requestData.data.nickname = $routeParams.nickname;
+	}
+
+
 	$scope.widget.blog = {
-		emptyText: "NO",
-		data: []
+		emptyText: $routeParams.nickname === $users.nickname ? "You haven't write any blog yet!" : $routeParams.nickname + " haven't write any blog yet!",
+		data: [],
+		user: $routeParams.nickname
 	}
 	$request.query({
-		url: "./data/blog.json",
-		data: {
-			action: "getBlogIndex"
-		}
+		// url: "./data/blog.json",
+		url: "./php/passage",
+		// url: "./php/user",
+		// method:
+		data: requestData
 	}, function(data) {
-		$scope.widget.blog.data = data;
+
+		if (data.isFound === false) {
+			$location.path("/" + $users.getName() + "/blog");
+		} else {
+			$scope.widget.blog.data = data.list;
+			if (!$scope.isUser) {
+				$scope.widget.author.text = data.nickname;
+				$scope.widget.bio.text = data.bio;
+				$scope.widget.portrait.imgSrc = data.portrait;
+				var apps = data.apps;
+				for (var prop in apps) {
+					$scope.widget.apps.data[prop] = {
+						name: prop,
+						href: (prop === "email" ? "mailto:" : "") + apps[prop],
+						src: "./img/icon/" + prop + ".png"
+					}
+				}
+			}
+
+		}
+
 	}, function() {
-		$scope.widget.blog.data.length = 0;
+
 	})
 	$scope.widget.createBtn = {
 		text: "Write a new blog",

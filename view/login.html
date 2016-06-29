@@ -5,16 +5,17 @@
 		</div>
 	</section>
 	<section class="page-section main-section">
-		<div class="page-section-content form-container"  ng-class="isLogin?'show-login':'hide-login'">
+		<div class="page-section-content form-container login"  ng-class="isLogin?'show-login':'hide-login'">
 			<form name="loginForm" class="login-form">
 				<div text-box config="widget.loginForm.username"></div>
 				<div text-box config="widget.loginForm.password"></div>
 				<div button config="widget.loginForm.loginBtn"></div>
 			</form>
 		</div>
-		<div class="page-section-content form-container"  ng-class="isLogin?'hide-register':'show-register'">
+		<div class="page-section-content form-container register"  ng-class="isLogin?'hide-register':'show-register'">
 			<form name="registerForm" class="register-form">
 				<div text-box config="widget.registerForm.username"></div>
+				<div text-box config="widget.registerForm.nickname"></div>
 				<div text-box config="widget.registerForm.password"></div>
 				<div text-box config="widget.registerForm.confirm"></div>
 				<div button config="widget.registerForm.registerBtn"></div>

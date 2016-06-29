@@ -1,17 +1,25 @@
-mpw.directive("navigator", ["$module", "$location", "$user", "$timeout", function($module, $location, $user, $timeout) {
+mpw.directive("navigator", ["$location", "$users", "$timeout", "$request", function($location, $users, $timeout, $request) {
 	var innerHTML = 	"<div class=\"widget-nav-container\">";
 		innerHTML += 		"<div class=\"widget-nav-content\">";
 		innerHTML += 			"<ul class=\"widget-nav-ul\">";
-		innerHTML += 				"<li ng-repeat=\"nav in navs\" class=\"widget-nav-li {{nav.name}}\" ng-click=\"goto(nav.url)\">";
+		innerHTML += 				"<li ng-repeat=\"nav in config.navs\" class=\"widget-nav-li {{nav.name}}\" ng-click=\"goto(nav.url)\">";
 		innerHTML += 					"<a href=\"javascript:void(0)\" class=\"widget-nav-link\">";
-		innerHTML += 					"{{nav.name | uppercase}}";
+		innerHTML += 					"{{nav.name}}";
 		innerHTML += 					"</a>";
 		innerHTML += 				"</li>";
 		innerHTML += 			"</ul>";
 		innerHTML += 		"</div>";
+
+		innerHTML += 		"<div class=\"widget-search-container\">";
+		innerHTML +=			"<div class=\"widget-user-content\">";
+		innerHTML +=				"<input type=\"text\" class=\"widget-search-input\" ng-model=\"searchData\" />";
+		innerHTML +=				"<button class=\"widget-search-button\" ng-click=\"seachUser();\"><i class=\"widget-search-icon\"></></button>";
+		innerHTML +=			"</div>";
+		innerHTML += 		"</div>";
+
 		innerHTML += 		"<div class=\"widget-user-container\" ng-mouseover=\"mouseover()\" ng-mouseleave=\"mouseleave()\">";
 		innerHTML += 			"<div class=\"widget-user-content\">";
-		innerHTML += 				"<span class=\"widget-user-text\">{{name}}</span>";
+		innerHTML += 				"<span class=\"widget-user-text\">{{config.nickname}}</span>";
 		innerHTML += 			"</div>";
 		innerHTML += 			"<div class=\"widget-drop-content\" ng-show=\"isDropped\" ng-mouseover=\"mouseover()\" ng-mouseleave=\"mouseleave()\">";
 		innerHTML += 				"<ul class=\"widget-drop-ul\">";
@@ -29,16 +37,42 @@ mpw.directive("navigator", ["$module", "$location", "$user", "$timeout", functio
 		restrict: "A",
 		replace: true,
 		template: innerHTML,
-		scope: true,
+		scope: {
+			config: "="
+		},
 		compile: function(ele, attr, trans) {
 			return function(scope, ele, attr) {
-				var navs = $module.getRoutes();
+				// var navs = $module.getRoutes();
 				var timer;
+				var search = document.getElementsByClassName("widget-search-input")[0];
+				var searchButton = document.getElementsByClassName("widget-search-button")[0];
 
-				// scope.navs = [navs.intro, navs.blog, navs.resume];
-				scope.navs = [navs.blog, navs.resume];
+				scope.searchData = "";
+
+				scope.seachUser = function() {
+					searchButton.blur();
+					if (scope.searchData !== "") {
+						$request.query({
+							url: "./php/user",
+							method: "POST",
+							data: {
+								action: "search",
+								data: {
+									nickname: scope.searchData
+								}
+							}
+						}, function(data) {
+							scope.searchData = "";
+							$location.path("/" + data.nickname + "/blog");
+						})
+					}
+				}
+
 				scope.isDropped = false;
-				scope.name = $user.getName();
+				// scope.navs = [navs.intro, navs.blog, navs.resume];
+				// scope.navs = [navs.blog, navs.resume];
+
+
 
 				scope.goto = function(url) {
 					$location.path(url);
@@ -54,11 +88,28 @@ mpw.directive("navigator", ["$module", "$location", "$user", "$timeout", functio
 					}, 500)
 				}
 				scope.logout = function() {
-					$user.logout();
+					$request.query({
+						url: "./php/user",
+						data: {
+							data: {
+								uid: $users.getId()
+							},
+							action: "logout"
+						}
+					}, function() {
+						$users.setStatus(false);
+						$users.setId(null);
+						$users.setName(null);
+					})
 				}
 				scope.gotoProfile = function() {
-					$location.path("/profile")
+					$location.path("/" + scope.name +"/profile");
 				}
+				angular.element(search).on("keypress", function(event) {
+					if (event.keyCode === 13) {
+						scope.seachUser();
+					}
+				})
 			}
 		}
 
@@ -105,22 +156,29 @@ mpw.directive("message", ["$message", function($message) {
 }]);
 
 mpw.directive("appLink", function() {
-	var innerHTML = "<div class=\"widget-apps-container\">";
-	innerHTML += "<div class=\"widget-apps-content\">";
-	innerHTML += "<ul class=\"widget-apps-ul\">";
-	innerHTML += "<li ng-repeat=\"app in apps\" class=\"widget-apps-li {{app.name}}\">";
-	innerHTML += "<a href=\"{{app.href}}\" class=\"widget-app-link\">";
-	innerHTML += "<img ng-src=\"{{app.src}}\" alt=\"{{app.name}}\" class=\"widget-app-img\">";
-	innerHTML += "</a>";
-	innerHTML += "</li>";
-	innerHTML += "</ul>";
-	innerHTML += "</div>";
-	innerHTML += "</div>";
+	var innerHTML = 	"<div class=\"widget-apps-container\">";
+		innerHTML += 		"<div class=\"widget-apps-content\">";
+		innerHTML += 			"<ul class=\"widget-apps-ul\">";
+		innerHTML += 				"<li ng-repeat=\"app in config.data\" class=\"widget-apps-li {{app.name}}\">";
+		innerHTML += 					"<a href=\"{{app.href}}\" class=\"widget-app-link\">";
+		innerHTML += 						"<img ng-src=\"{{app.src}}\" alt=\"{{app.name}}\" class=\"widget-app-img\">";
+		innerHTML += 					"</a>";
+		innerHTML += 				"</li>";
+		innerHTML += 			"</ul>";
+		innerHTML += 		"</div>";
+		innerHTML += 	"</div>";
 	return {
 		restrict: "A",
 		replace: true,
 		template: innerHTML,
-		scope: false
+		scope: {
+			config: "="
+		},
+		compile: function(ele, attr, trans) {
+			return function(scope, ele, attr) {
+				console.log(scope)
+			}
+		}
 	}
 });
 
@@ -209,10 +267,12 @@ mpw.directive("button", function() {
 			}
 			return function(scope, ele, attr) {
 				scope.config = angular.extend({}, defaultConfig, scope.config);
+				var button = ele.find("button")[0];
 				ele.on("mousedown", function(event) {
 					event.preventDefault();
 					event.stopPropagation();
 					event.stopImmediatePropagation();
+					button.focus();
 					ele.addClass("focus");
 				})
 				ele.on("mouseup", function(event) {
@@ -234,7 +294,7 @@ mpw.directive("list", ["$location", function($location) {
 		innerHTML += 					"<div class=\"widget-row-title\" ng-click=\"viewPassage(row)\">";
 		innerHTML += 						"<a href=\"javascript:void(0)\" class=\"widget-row-link\">{{row.title}}</a>"
 		innerHTML += 					"</div>";
-		innerHTML += 					"<div class=\"widget-row-time\">{{row.posttime}}</div>";
+		innerHTML += 					"<div class=\"widget-row-time\">{{row.lastmodifytime}}</div>";
 		innerHTML += 				"</li>";
 		innerHTML += 			"</ul>";
 		innerHTML += 		"</div>";
@@ -252,13 +312,14 @@ mpw.directive("list", ["$location", function($location) {
 		compile: function(ele, attr, trans) {
 			var defaultConfig = {
 				emptyText: "You haven't write any blog yet!",
-				data: []
+				data: [],
+				user: ""
 			}
 			return function(scope, ele, attr) {
 				scope.config = angular.extend({}, defaultConfig, scope.config);
 				scope.isEmpty = scope.config.data.length > 0 ? false : true;
 				scope.viewPassage = function(row) {
-					$location.path("/passage/" + row.passageId);
+					$location.path("/" + scope.config.user + "/passage/" + row.blogId);
 				}
 			}
 		}
@@ -266,14 +327,19 @@ mpw.directive("list", ["$location", function($location) {
 }])
 
 mpw.directive("pdf", function() {
-	var innerHTML = "<div class=\"widget-pdf-container\">";
-	innerHTML += "<div class=\"widget-pdf-content\">";
-	innerHTML += "<iframe ng-src=\"{{config.url}}\" type=\"application/pdf\" ></iframe>";
-	innerHTML += "</div>";
-	// innerHTML +=		"<div class=\"widget-pdf-empty-content\" ng-switch-when=\"true\">";
-	// innerHTML +=			"<span class=\"widget-pdf-empty-text\">{{config.emptyMsg}}</span>";
-	// innerHTML +=		"</div>";
-	innerHTML += "</div>";
+	var innerHTML = 	"<div class=\"widget-pdf-container\">";
+		innerHTML += 		"<div class=\"widget-label-container {{config.labelCls}}\"  ng-hide=\"config.isImg\">";
+		innerHTML += 			"<div class=\"widget-label-content\">";
+		innerHTML += 				"<span class=\"widget-label-file\">{{config.label}}</span>";
+		innerHTML += 			"</div>";
+		innerHTML += 		"</div>";
+		innerHTML += 		"<div class=\"widget-pdf-content\" ng-hide=\"config.isEmpty\">";
+		innerHTML += 			"<iframe ng-src=\"{{config.url}}\" type=\"application/pdf\" ></iframe>";
+		innerHTML += 		"</div>";
+		// innerHTML +=		"<div class=\"widget-pdf-empty-content\" ng-switch-when=\"true\">";
+		// innerHTML +=			"<span class=\"widget-pdf-empty-text\">{{config.emptyMsg}}</span>";
+		// innerHTML +=		"</div>";
+		innerHTML += 	"</div>";
 	return {
 		restrict: "A",
 		replace: true,
@@ -309,6 +375,7 @@ mpw.directive("file", ["$request", function($request) {
 		innerHTML += 				" class=\"widget-file-input\"";
 		innerHTML += 				" ng-disabled=\"config.disabled\"";
 		innerHTML += 				" ng-model=\"data\">";
+		innerHTML +=			"<input type=\"text\" ng-model=\"data.name\" ng-hide=\"config.isEmpty\" readonly=\"true\ >";
 		innerHTML += 		"</div>";
 		innerHTML += 		"<div class=\"widget-error-container  {{config.errorCls}}\">";
 		innerHTML += 			"<div ng-hide=\"config.isValid\" class=\"widget-error-content\">";
@@ -333,7 +400,7 @@ mpw.directive("file", ["$request", function($request) {
 		scope: {
 			config: "="
 		},
-		controller: ["$scope", "$element", "$request", function($scope, $element, $request) {
+		controller: ["$scope", "$element", "$request", "$message", function($scope, $element, $request, $message) {
 				$scope.showMask = function() {
 					$scope.maskVisible = true;
 				}
@@ -348,7 +415,9 @@ mpw.directive("file", ["$request", function($request) {
 					disabled: false,
 					isValid: true,
 					isImg: false,
+					isEmpty: true,
 					url: "./data/upload.json",
+					maxSize: 5,
 					chooseBtn: {
 						text: "Choose",
 						fn: $scope.chooseFile
@@ -356,9 +425,36 @@ mpw.directive("file", ["$request", function($request) {
 					uploadBtn: {
 						text: "Upload",
 						fn: function() {
-							var data = new FormData();
-							data.append("file", $scope.data);
-							$request.query({
+							var me = this;
+							me.disabled = true;
+							if ($scope.config.isEmpty) {
+								$message.show({
+									title: "Error",
+									text: "Please choose a file!!",
+									button: [{
+										text: "OK",
+										fn: function() {
+											$message.hide();
+											me.disabled = false;
+										}
+									}]
+								})
+							} else if ($scope.data.size/1048576 > $scope.config.maxSize) {
+								$message.show({
+									title: "Error",
+									text: "The file you are trying to upload are more than " + $scope.config.maxSize + "MB. Please choose another one.",
+									button: [{
+										text: "OK",
+										fn: function() {
+											$message.hide();
+											me.disabled = false;
+										}
+									}]
+								})
+							}else{
+								var data = new FormData();
+								data.append("file", $scope.data);
+								$request.query({
 									url: $scope.config.url,
 									data: data,
 									withCredentials: true,
@@ -368,11 +464,15 @@ mpw.directive("file", ["$request", function($request) {
 									transformRequest: angular.identity
 								},
 								function(data) {
-									$scope.config.successFn(data)
+									me.disabled = false;
+									$scope.config.successFn(data);
 								},
 								function(data) {
-									$scope.config.failureFn(data)
+									me.disabled = false;
+									$scope.config.failureFn(data);
 								})
+							}
+
 						}
 					},
 					successFn: function() {},
@@ -400,6 +500,16 @@ mpw.directive("file", ["$request", function($request) {
 						reader.readAsDataURL($scope.data);
 					}
 				});
+				$scope.$watch(function() {
+					return $scope.data
+				}, function(newVal) {
+						if (newVal && newVal.name !== "") {
+							$scope.config.isEmpty = false;
+						}else{
+							$scope.config.isEmpty = true;
+						}
+					
+				})
 
 			}]
 			// ,

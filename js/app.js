@@ -5,7 +5,9 @@ mpw.config([
 	"$filterProvider",
 	"$provide",
 	"$locationProvider",
-	function($controllerProvider, $routeProvider, $filterProvider, $provide, $locationProvider) {
+	"$httpProvider",
+	function($controllerProvider, $routeProvider, $filterProvider, $provide, $locationProvider, $httpProvider) {
+		$httpProvider.defaults.withCredentials = true;
 		$locationProvider.html5Mode({
 			enabled: true,
 			requireBase: false
@@ -19,7 +21,6 @@ mpw.config([
 		mpw.decorator = $provide.decorator;
 
 	}
-]).run(["$module", "$user", "$rootScope", function($module, $user, $rootScope) {
-	$rootScope.pageTitle = $user.nickname || "MPW"; //need to change with url
+]).run(["$module", "$users", "$rootScope", function($module, $users, $rootScope) {
 
 }])

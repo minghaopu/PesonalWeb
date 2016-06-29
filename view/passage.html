@@ -1,8 +1,18 @@
-<div id="passage+{{passageId}}">
-	<section class="page-section">
+<div id="passage" ng-switch on="isUser">
+	<section class="page-section sidebar" ng-switch-when="true">
 		<div class="page-section-content">
 			<div button config="widget.edit"></div>
 			<div button config="widget.delete"></div>
+			<div button config="widget.back"></div>
+		</div>
+	</section>
+	<section class="page-section sidebar" ng-switch-when="false">
+		<div class="page-section-content">
+			<div display config="widget.portrait"></div>
+			<div display config="widget.author"></div>
+			<div display config="widget.bio"></div>
+		</div>
+		<div class="page-section-content">
 			<div button config="widget.back"></div>
 		</div>
 	</section>
