@@ -51,11 +51,11 @@
 						}
 					} else {
 						$oldPathArray = array (
-							'jpg' => './img/portrait'.$uid.'.jpg',
-							'gif' => './img/portrait'.$uid.'.gif',
-							'bmp' => './img/portrait'.$uid.'.bmp',
-							'jpeg' => './img/portrait'.$uid.'.jpeg',
-							'png' => './img/portrait'.$uid.'.png'
+							'jpg' => './img/portrait/portrait'.$uid.'.jpg',
+							'gif' => './img/portrait/portrait'.$uid.'.gif',
+							'bmp' => './img/portrait/portrait'.$uid.'.bmp',
+							'jpeg' => './img/portrait/portrait'.$uid.'.jpeg',
+							'png' => './img/portrait/portrait'.$uid.'.png'
 						);
 						$size = 2000000;
 						$newPath = '../img/portrait'.$uid.$ext;

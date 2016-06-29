@@ -1,44 +1,59 @@
 {
 	"success": true,
-	"data": [{
-		"title" : "blogtitle1",
-		"posttime" : "2010.01.01",
-		"passageId" : "1"
-	},{
-		"title" : "blogtitle2",
-		"posttime" : "2010.01.01",
-		"passageId" : "2"
-	},{
-		"title" : "blogtitle3",
-		"posttime" : "2010.01.01",
-		"passageId" : "3"
-	},{
-		"title" : "blogtitle4",
-		"posttime" : "2010.01.01",
-		"passageId" : "4"
-	},{
-		"title" : "blogtitle5",
-		"posttime" : "2010.01.01",
-		"passageId" : "5"
-	},{
-		"title" : "blogtitle6",
-		"posttime" : "2010.01.01",
-		"passageId" : "6"
-	},{
-		"title" : "blogtitle7",
-		"posttime" : "2010.01.01",
-		"passageId" : "7"
-	},{
-		"title" : "blogtitle8",
-		"posttime" : "2010.01.01",
-		"passageId" : "8"
-	},{
-		"title" : "blogtitle9",
-		"posttime" : "2010.01.01",
-		"passageId" : "9"
-	},{
-		"title" : "blogtitle10",
-		"posttime" : "2010.01.01",
-		"passageId" : "10"
-	}]
+	"data": {
+		"nickname": "abcd",
+		"bio": "this is abcd",
+		"portrait": "./img/portrait/portrait.png",
+		"apps": {
+			"linkedin": "https://www.linkedin.com/in/MinghaoPu",
+			"facebook": "https://www.facebook.com/roneil.pmh",
+			"github": "https://github.com/roneilPMH",
+			"twitter": "https://twitter.com/NealPu_MH",
+			"email": "nealpu@gwu.edu"
+		},
+		"list": [{
+			"title" : "blogtitle1",
+			"posttime" : "2010.01.01",
+			"blogId" : "1"
+		},{
+			"title" : "blogtitle2",
+			"posttime" : "2010.01.01",
+			"blogId" : "2"
+		},{
+			"title" : "blogtitle3",
+			"posttime" : "2010.01.01",
+			"blogId" : "3"
+		},{
+			"title" : "blogtitle4",
+			"posttime" : "2010.01.01",
+			"blogId" : "4"
+		},{
+			"title" : "blogtitle5",
+			"posttime" : "2010.01.01",
+			"blogId" : "5"
+		},{
+			"title" : "blogtitle6",
+			"posttime" : "2010.01.01",
+			"blogId" : "6"
+		},{
+			"title" : "blogtitle7",
+			"posttime" : "2010.01.01",
+			"blogId" : "7"
+		},{
+			"title" : "blogtitle8",
+			"posttime" : "2010.01.01",
+			"blogId" : "8"
+		},{
+			"title" : "blogtitle9",
+			"posttime" : "2010.01.01",
+			"blogId" : "9"
+		},{
+			"title" : "blogtitle10",
+			"posttime" : "2010.01.01",
+			"blogId" : "10"
+		}]
+	},
+	"error": {
+		"errorcode": "6"
+	}
 }
