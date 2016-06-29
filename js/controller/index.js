@@ -50,7 +50,7 @@ mpw.controller("index", [
 
 		$request.query({
 			// url: "./data/loginInfo.json",
-			url: "./php/user",
+			url: "http://50.112.16.154/php/user",
 			async: false,
 			data: {
 				action: "check",
