@@ -25,6 +25,7 @@
 
 			if ($ssresult) {
 				$uid = $_SESSION['id'];
+				echo json_encode($_FILES["file"]["error"]);
 
 				if ($_FILES["file"]["error"] > 0) {
 					$errorcode = 21; //upload error
