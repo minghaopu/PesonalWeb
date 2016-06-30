@@ -5,25 +5,25 @@
 			$data = array();
 			$errorcode = -2;
 
-			// session_start();
-			// if (!isset($_SESSION['generated']) || $_SESSION['generated'] < (time() - 60)) {
-			// 	session_regenerate_id();
-			// 	$_SESSION['generated'] = time();
-			// }
-			// if (isset($_SESSION['uid']) && isset($_COOKIE["uid"]) && $_SESSION['uid'] === $_COOKIE['uid']) {
-			// 	if (isset($_SESSION['uid']) && isset($_COOKIE["uid"]) && $_SESSION['uid'] === $_COOKIE['uid']) {
-			// 		$success = true;
-			// 		$GLOBALS['islogged'] = true;
-			// 	}else {
-			// 		$GLOBALS['islogged'] = false;
-			// 		$errorcode = -4;
-			// 	}
-			// } else {
-			// 	$errorcode = -3;
-			// 	$GLOBALS['islogged'] = false;
-			// }
+			session_start();
+			if (!isset($_SESSION['generated']) || $_SESSION['generated'] < (time() - 60)) {
+				session_regenerate_id();
+				$_SESSION['generated'] = time();
+			}
+			if (isset($_SESSION['uid']) && isset($_COOKIE["uid"]) && $_SESSION['uid'] === $_COOKIE['uid']) {
+				if (isset($_SESSION['uid']) && isset($_COOKIE["uid"]) && $_SESSION['uid'] === $_COOKIE['uid']) {
+					$success = true;
+					$GLOBALS['islogged'] = true;
+				}else {
+					$GLOBALS['islogged'] = false;
+					$errorcode = -4;
+				}
+			} else {
+				$errorcode = -3;
+				$GLOBALS['islogged'] = false;
+			}
 
-			if (sessionCheck()) {
+			if ($success) {
 				$uid = $_SESSION['id'];
 
 				if ($_FILES["file"]["error"] > 0) {
@@ -52,10 +52,10 @@
 											$success = true;
 										} else {
 											$errorcode = 15; //db error
+											$success = false;
 										}
 										unset($db);
-										
-										$success = true;
+
 										$data['resume'] = $resume;
 									}
 								// } else {
@@ -63,9 +63,11 @@
 								// }
 							}else {
 								$errorcode = 23; //size error
+								$success = false;
 							}
 						} else {
 							$errorcode = 22; //type error
+							$success = false;
 						}
 					} else {
 						$oldPathArray = array (
@@ -96,20 +98,22 @@
 										if ($db->_update($sql) === 1) {
 											$success = true;
 										} else {
+											$success = false;
 											$errorcode = 15; //db error
 										}
 										unset($db);
 										
-										$success = true;
 										$data['portrait'] = $portrait;
 									}
 								// } else {
 								// 	$errorcode = 24; // not http upload
 								// }
 							}else {
+								$success = false;
 								$errorcode = 23; //size error
 							}
 						} else {
+							$success = false;
 							$errorcode = 22; //type error
 						}
 					}
