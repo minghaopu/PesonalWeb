@@ -34,7 +34,7 @@
 
 					if ($operation === 'resume') {
 						$size = 5000000;
-						$oldPath = './pdf/resume'.$uid.'.pdf';
+						$oldPath = '../pdf/resume'.$uid.'.pdf';
 						$storePath = './pdf/resume'.$uid.'.pdf';
 
 						if ($ext === 'pdf') {
@@ -82,7 +82,7 @@
 							'png' => './img/portrait/portrait'.$uid.'.png'
 						);
 						$size = 2000000;
-						$newPath = './img/portrait/portrait'.$uid.".".$ext;
+						$newPath = '../img/portrait/portrait'.$uid.".".$ext;
 						$storePath = './img/portrait/portrait'.$uid.".".$ext;
 						if ($ext === 'jpq' || $ext === 'gif' || $ext === 'bmp' || $ext === 'jpeg' || $ext === 'png'){
 							if ($_FILES["file"]["size"] < $size) {
