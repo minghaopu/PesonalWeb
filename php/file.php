@@ -4,7 +4,7 @@
 			$success = false;
 			$data = array();
 			$errorcode = -2;
-
+			$ssresult = false;
 			session_start();
 			if (!isset($_SESSION['generated']) || $_SESSION['generated'] < (time() - 60)) {
 				session_regenerate_id();
@@ -12,7 +12,7 @@
 			}
 			if (isset($_SESSION['uid']) && isset($_COOKIE["uid"]) && $_SESSION['uid'] === $_COOKIE['uid']) {
 				if (isset($_SESSION['uid']) && isset($_COOKIE["uid"]) && $_SESSION['uid'] === $_COOKIE['uid']) {
-					$success = true;
+					$ssresult = true;
 					$GLOBALS['islogged'] = true;
 				}else {
 					$GLOBALS['islogged'] = false;
@@ -23,7 +23,7 @@
 				$GLOBALS['islogged'] = false;
 			}
 
-			if ($success) {
+			if ($ssresult) {
 				$uid = $_SESSION['id'];
 
 				if ($_FILES["file"]["error"] > 0) {
@@ -34,7 +34,7 @@
 
 					if ($operation === 'resume') {
 						$size = 5000000;
-						$oldPath = '../pdf/resume'.$uid.'.pdf';
+						$oldPath = './pdf/resume'.$uid.'.pdf';
 						$storePath = './pdf/resume'.$uid.'.pdf';
 						if ($ext === 'pdf') {
 							if ($_FILES["file"]["size"] < $size) {
@@ -57,6 +57,9 @@
 										unset($db);
 
 										$data['resume'] = $resume;
+									}else {
+										$errorcode = 15; //db error
+										$success = false;
 									}
 								// } else {
 								// 	$errorcode = 24; // not http upload
@@ -78,7 +81,7 @@
 							'png' => './img/portrait/portrait'.$uid.'.png'
 						);
 						$size = 2000000;
-						$newPath = '../img/portrait/portrait'.$uid.".".$ext;
+						$newPath = './img/portrait/portrait'.$uid.".".$ext;
 						$storePath = './img/portrait/portrait'.$uid.".".$ext;
 						if ($ext === 'jpq' || $ext === 'gif' || $ext === 'bmp' || $ext === 'jpeg' || $ext === 'png'){
 							if ($_FILES["file"]["size"] < $size) {
