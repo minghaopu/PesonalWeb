@@ -2,7 +2,7 @@
 	/*
 	 *	Database Configuration
 	 */
-
+	require_once "../inc/dbinfo.inc";
 
 	/*
 	 *	User Sql
