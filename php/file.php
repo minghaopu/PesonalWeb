@@ -35,7 +35,7 @@
 
 					if ($operation === 'resume') {
 						$size = 5000000;
-						$oldPath = '/var/www/html/pdf/resume'.$uid.'.pdf';
+						$oldPath = '../pdf/resume'.$uid.'.pdf';
 						$storePath = './pdf/resume'.$uid.'.pdf';
 
 						if ($ext === 'pdf') {
