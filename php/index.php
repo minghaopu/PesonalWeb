@@ -5,12 +5,13 @@
 	ini_set('session.cookie_lifetime', 84600);
 	ini_set('session.gc_maxlifetime', 84600);
 
+	require_once 'util.php';
+	require_once 'db.php';
 	require_once 'json.php';
 	require_once 'user.php';
 	require_once 'blog.php';
 	require_once 'file.php';
-	require_once 'util.php';
-	require_once 'db.php';
+
 
 	date_default_timezone_set("UTC");
 
