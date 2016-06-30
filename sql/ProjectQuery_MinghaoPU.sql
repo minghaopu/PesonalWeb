@@ -26,13 +26,15 @@ CREATE TABLE `myblogdb`.`Users` (`uid` INT(11) NOT NULL AUTO_INCREMENT,
 	UNIQUE (`nickname`)
 ) ENGINE = InnoDB;
 
+ALTER TABLE myblogdb.Users CHANGE `portrait` `portrait` VARCHAR(127) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT './img/portrait/default.png';
+
 CREATE VIEW myblogdb.UserAuthentication AS SELECT uid, username, password, nickname FROM myblogdb.Users;
 
 ALTER TABLE myblogdb.Blogs ADD FOREIGN KEY (uid) REFERENCES myblogdb.Users(uid);
 
 CREATE VIEW myblogdb.UserInfo AS SELECT uid, email, bio, nickname, facebook, twitter, github, linkedin, resume, portrait FROM myblogdb.Users;
 
-CREATE VIEW myblogdb.UserBlogIndex AS SELECT blogId, myblogdb.Users.uid, nickname, title, createtime FROM myblogdb.Users, myblogdb.Blogs WHERE myblogdb.Users.uid=myblogdb.Blogs.uid
+CREATE VIEW myblogdb.UserBlogIndex AS SELECT blogId, myblogdb.Users.uid, nickname, title, lastmodifytime FROM myblogdb.Users, myblogdb.Blogs WHERE myblogdb.Users.uid=myblogdb.Blogs.uid
 
 -- query for user authentication
 SELECT uid, nickname
