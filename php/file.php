@@ -36,6 +36,7 @@
 						$size = 5000000;
 						$oldPath = './pdf/resume'.$uid.'.pdf';
 						$storePath = './pdf/resume'.$uid.'.pdf';
+						echo json_encode($uid);
 						if ($ext === 'pdf') {
 							if ($_FILES["file"]["size"] < $size) {
 								// if (is_uploaded_file($_FILES['file']['name'])){
