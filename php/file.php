@@ -59,7 +59,7 @@
 
 										$data['resume'] = $resume;
 									}else {
-										$errorcode = 15; //db error
+										$errorcode = -4; //db error
 										$success = false;
 									}
 								// } else {
