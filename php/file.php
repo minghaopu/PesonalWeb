@@ -3,7 +3,7 @@
 		public function upload($operation){
 			$success = false;
 			$data = array();
-			$errorcode = -1;
+			$errorcode = -2;
 
 			if (sessionCheck()) {
 				$uid = $_SESSION['id'];
@@ -98,7 +98,7 @@
 				}
 			}else {
 				$success = false;
-				$errorcode = -1;
+				$errorcode = -3;
 			}
 
 			$return = new ReturnData($data, $errorcode, $success);
