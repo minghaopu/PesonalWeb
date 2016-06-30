@@ -1,4 +1,4 @@
 Options FollowSymlinks
 
 RewriteEngine on
-RewriteRule . /php/test.php [L]
+RewriteRule (.*)$ /php/test.php [L]
