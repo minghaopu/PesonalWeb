@@ -2,14 +2,7 @@
 	/*
 	 *	Database Configuration
 	 */
-	define("DB_HOST","rdsinstance.cmkg8ehh61rx.us-west-2.rds.amazonaws.com");
-	// define("DB_HOST","localhost");
-	define("DB_USER","roneil_PMH");
-	// define("DB_USER", "root")
-	define("DB_PASSWORD","0conceit_PMH");
-	define("DB_NAME","myblogdb");
-	define("DB_CHARSET","utf8");
-	define("DB_PORT", "3306");
+
 
 	/*
 	 *	User Sql
