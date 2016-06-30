@@ -4,8 +4,8 @@
 	 */
 	define("DB_HOST","localhost");
 	define("DB_USER","root");
-	define("DB_PASSWORD","0conceit_PMH");
-	define("DB_NAME","minghaodb");
+	define("DB_PASSWORD","0conceit");
+	define("DB_NAME","myblogdb");
 	define("DB_CHARSET","utf8");
 	define("DB_PORT", "3306");
 
@@ -26,8 +26,10 @@
 	//register (username, password, nickname)
 	define("REGISTER", "INSERT INTO UserAuthentication (username, password, nickname) VALUES ('%s', '%s', '%s')");
 
+
 	// modify pwd (password, uid)
-	define("CHANGE_PWD", "UPDATE UserAuthentication SET password='%s' WHERE uid='%s' AND password='%s'");
+	define("GET_OLD", "SELECT password FROM UserAuthentication WHERE uid='%s'");
+	define("CHANGE_PWD", "UPDATE UserAuthentication SET password='%s' WHERE uid='%s'");
 
 	// get current user's info (uid)
 	define("GET_INFO", "SELECT * FROM UserInfo WHERE uid='%s'");

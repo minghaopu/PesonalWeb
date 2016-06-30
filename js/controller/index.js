@@ -50,7 +50,7 @@ mpw.controller("index", [
 
 		$request.query({
 			// url: "./data/loginInfo.json",
-			url: "http://50.112.16.154/php/user",
+			url: "./php/user",
 			async: false,
 			data: {
 				action: "check",
@@ -76,7 +76,7 @@ mpw.controller("index", [
 			for (var prop in apps) {
 				$scope.apps.data[prop] = {
 					name: prop,
-					href: (prop === "email" ? "mailto:" : "") + apps[prop],
+					href: (prop === "email" ? "mailto:" : "http://") + apps[prop],
 					src: "./img/icon/" + prop + ".png"
 				}
 			}

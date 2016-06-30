@@ -103,7 +103,7 @@ mpw.directive("navigator", ["$location", "$users", "$timeout", "$request", funct
 					})
 				}
 				scope.gotoProfile = function() {
-					$location.path("/" + scope.name +"/profile");
+					$location.path("/" + $users.getName() +"/profile");
 				}
 				angular.element(search).on("keypress", function(event) {
 					if (event.keyCode === 13) {
@@ -183,42 +183,42 @@ mpw.directive("appLink", function() {
 });
 
 mpw.directive("textBox", function() {
-	var innerHTML = "<div class=\"widget-text-wrapper {{config.cls}}\">";
-	innerHTML += "<div class=\"widget-icon-container {{config.iconCls}}\">";
-	innerHTML += "<div class=\"widget-icon-content\"></div>";
-	innerHTML += "</div>";
-	innerHTML += "<div class=\"widget-label-container {{config.labelCls}}\">";
-	innerHTML += "<div class=\"widget-label-content\">";
-	innerHTML += "<span class=\"widget-label-text\">{{config.label}}</span>";
-	innerHTML += "</div>";
-	innerHTML += "</div>";
-	innerHTML += "<div class=\"widget-text-content {{config.inputCls}}\" ng-switch on=\"config.inputType\">";
-	innerHTML += "<input ng-switch-when=\"input\" type=\"{{config.type}}\"";
-	innerHTML += " name=\"{{config.name}}\"";
-	innerHTML += " class=\"widget-text-input\"";
-	innerHTML += " ng-readonly=\"config.readOnly\"";
-	innerHTML += " maxlength=\"{{config.maxLength}}\"";
-	innerHTML += " minlength=\"{{config.minLength}}\"";
-	innerHTML += " placeholder=\"{{config.placeholder}}\"";
-	innerHTML += " ng-disabled=\"config.disabled\"";
-	innerHTML += " ng-trim=\"config.trim\"";
-	innerHTML += " ng-model=\"config.data\">";
-	innerHTML += "<textarea ng-switch-when=\"textarea\"";
-	innerHTML += " name=\"{{config.name}}\"";
-	innerHTML += " class=\"widget-text-input\"";
-	innerHTML += " maxlength=\"{{config.maxLength}}\"";
-	innerHTML += " placeholder=\"{{config.placeholder}}\"";
-	innerHTML += " ng-readonly=\"config.readOnly\"";
-	innerHTML += " ng-disabled=\"config.disabled\"";
-	innerHTML += " ng-trim=\"config.trim\"";
-	innerHTML += " ng-model=\"config.data\"></textarea>";
-	innerHTML += "</div>";
-	innerHTML += "<div class=\"widget-error-container  {{config.errorCls}}\">";
-	innerHTML += "<div ng-hide=\"config.isValid\" class=\"widget-error-content\">";
-	innerHTML += "<span class=\"widget-error-text\">{{config.error}}</span>";
-	innerHTML += "</div>";
-	innerHTML += "</div>";
-	innerHTML += "</div>";
+		var innerHTML = 	"<div class=\"widget-text-wrapper {{config.cls}}\">";
+			innerHTML += 		"<div class=\"widget-icon-container {{config.iconCls}}\">";
+			innerHTML += 			"<div class=\"widget-icon-content\"></div>";
+			innerHTML += 		"</div>";
+			innerHTML += 		"<div class=\"widget-label-container {{config.labelCls}}\">";
+			innerHTML += 			"<div class=\"widget-label-content\">";
+			innerHTML += 				"<span class=\"widget-label-text\">{{config.label}}</span>";
+			innerHTML += 			"</div>";
+			innerHTML += 		"</div>";
+			innerHTML += 		"<div class=\"widget-text-content {{config.inputCls}}\" ng-switch on=\"config.inputType\">";
+			innerHTML += 			"<input ng-switch-when=\"input\" type=\"{{config.type}}\"";
+			innerHTML += 				" name=\"{{config.name}}\"";
+			innerHTML += 				" class=\"widget-text-input\"";
+			innerHTML += 				" ng-readonly=\"config.readOnly\"";
+			innerHTML += 				" maxlength=\"{{config.maxLength}}\"";
+			innerHTML += 				" minlength=\"{{config.minLength}}\"";
+			innerHTML += 				" placeholder=\"{{config.placeholder}}\"";
+			innerHTML += 				" ng-disabled=\"config.disabled\"";
+			innerHTML += 				" ng-trim=\"config.trim\"";
+			innerHTML += 				" ng-model=\"config.data\">";
+			innerHTML += 			"<textarea ng-switch-when=\"textarea\"";
+			innerHTML += 				" name=\"{{config.name}}\"";
+			innerHTML += 				" class=\"widget-text-input\"";
+			innerHTML += 				" maxlength=\"{{config.maxLength}}\"";
+			innerHTML += 				" placeholder=\"{{config.placeholder}}\"";
+			innerHTML += 				" ng-readonly=\"config.readOnly\"";
+			innerHTML += 				" ng-disabled=\"config.disabled\"";
+			innerHTML += 				" ng-trim=\"config.trim\"";
+			innerHTML += 				" ng-model=\"config.data\"></textarea>";
+			innerHTML += 		"</div>";
+			innerHTML += 		"<div class=\"widget-error-container  {{config.errorCls}}\">";
+			innerHTML += 			"<div ng-hide=\"config.isValid\" class=\"widget-error-content\">";
+			innerHTML += 				"<span class=\"widget-error-text\">{{config.error}}</span>";
+			innerHTML += 			"</div>";
+			innerHTML += 		"</div>";
+			innerHTML += 	"</div>";
 	return {
 		restrict: "A",
 		replace: true,
@@ -291,10 +291,10 @@ mpw.directive("list", ["$location", function($location) {
 		innerHTML += 		"<div class=\"widget-list-content\" ng-hide=\"config.data.length > 0 ? false : true\">";
 		innerHTML += 			"<ul class=\"widget-list-ul\">";
 		innerHTML += 				"<li ng-repeat=\"row in config.data\" class=\"widget-list-row row-{{$index}}\">";
-		innerHTML += 					"<div class=\"widget-row-title\" ng-click=\"viewPassage(row)\">";
+		innerHTML += 					"<div class=\"widget-row-title row-column\" ng-click=\"viewPassage(row)\">";
 		innerHTML += 						"<a href=\"javascript:void(0)\" class=\"widget-row-link\">{{row.title}}</a>"
 		innerHTML += 					"</div>";
-		innerHTML += 					"<div class=\"widget-row-time\">{{row.lastmodifytime}}</div>";
+		innerHTML += 					"<div class=\"widget-row-time row-column\">{{row.lastmodifytime}}</div>";
 		innerHTML += 				"</li>";
 		innerHTML += 			"</ul>";
 		innerHTML += 		"</div>";
@@ -562,13 +562,14 @@ mpw.directive("file", ["$request", function($request) {
 }])
 
 mpw.directive("display", function() {
-	var innerHTML = 	"<div class=\"widget-display-wrapper {{config.cls}}\" ng-switch on=\"config.type\">";
+	var innerHTML = 	"<div class=\"widget-display-wrapper {{config.cls}}\" ng-switch on=\"config.type\"  ng-show=\"config.text\">";
 		innerHTML += 		"<div class=\"widget-icon-container {{config.iconCls}}\">";
 		innerHTML += 			"<div class=\"widget-icon-content\"></div>";
 		innerHTML += 		"</div>";
-		innerHTML += 		"<div class=\"widget-label-container {{config.labelCls}}\">";
+		innerHTML += 		"<div ng-switch-when=\"text\" class=\"widget-label-container {{config.labelCls}}\">";
 		innerHTML += 			"<div class=\"widget-label-content\">";
 		innerHTML += 				"<span class=\"widget-label-display\">{{config.label}}</span>";
+		innerHTML += 				"<span class=\"widget-label-display\" ng-show=\"config.label\">:</span>";
 		innerHTML += 			"</div>";
 		innerHTML += 		"</div>";
 		innerHTML += 		"<div ng-switch-when=\"text\" class=\"widget-display-text-content\">";
@@ -722,7 +723,7 @@ mpw.directive("dynamic", ["$compile", function($compile) {
 					var ann = "";
 					for (var i = 0; i < codes.length; i++) {
 						var c = codes[i];
-						
+						console.log(c);
 						if (codes[i] === "/" && (codes[i + 1] == "*")) {
 							isAnno = true;
 							newCode += "<span class=\"code-word-annotation\">/*";

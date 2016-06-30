@@ -31,6 +31,7 @@ mpw.controller("blog", ["$scope", "$users", "$request", "$location", "$routePara
 	if ($routeParams.nickname === $users.getName()) {
 		$scope.isUser = true;
 		requestData.data.isUser = true;
+		requestData.data.nickname = $users.getName()
 	} else {
 		$scope.isUser = false;
 		requestData.data.isUser = false;
@@ -39,7 +40,7 @@ mpw.controller("blog", ["$scope", "$users", "$request", "$location", "$routePara
 
 
 	$scope.widget.blog = {
-		emptyText: $routeParams.nickname === $users.nickname ? "You haven't write any blog yet!" : $routeParams.nickname + " haven't write any blog yet!",
+		emptyText: $routeParams.nickname === $users.getName() ? "You haven't write any blog yet!" : $routeParams.nickname + " haven't write any blog yet!",
 		data: [],
 		user: $routeParams.nickname
 	}

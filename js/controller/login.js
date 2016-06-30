@@ -52,6 +52,17 @@ mpw.controller("login", ["$scope", "$users", "$message", "$error", "$request", "
 					$users.setStatus(true);
 					$users.setId(data.uid);
 					$users.setName(data.nickname);
+					console.log($scope.$parent)
+					$scope.$parent.nav = {
+						navs: [{
+							name: "My Blog",
+							url: "/" + data.nickname + "/blog"
+						}, {
+							name: "My Resume",
+							url: "/" + data.nickname + "/resume"
+						}],
+						nickname: data.nickname
+					};
 
 					$scope.$parent.nav.nickname = data.nickname;
 					var apps = data.apps;
@@ -124,6 +135,16 @@ mpw.controller("login", ["$scope", "$users", "$message", "$error", "$request", "
 					$users.setStatus(true);
 					$users.setId(data.uid);
 					$users.setName(data.nickname);
+					$scope.$parent.nav = {
+						navs: [{
+							name: "My Blog",
+							url: "/" + data.nickname + "/blog"
+						}, {
+							name: "My Resume",
+							url: "/" + data.nickname + "/resume"
+						}],
+						nickname: data.nickname
+					};
 
 					$scope.$parent.nav.nickname = data.nickname;
 					var apps = data.apps;

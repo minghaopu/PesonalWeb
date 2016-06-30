@@ -28,9 +28,39 @@ div.widget-tool-container ul li div img {
 }
 
 */
+
+/*list*/
+div.widget-list-container div.row-column{
+	display: inline-block;
+	margin: 10px;
+}
+
+/*text*/
+div.widget-text-wrapper {
+	margin: 10px;
+}
+div.widget-text-wrapper div.widget-label-container {
+	display: inline-block;
+	margin-right: 5px;
+}
+div.widget-text-content  {
+	display: inline-block;
+}
+div.widget-display-wrapper {
+	margin: 10px;
+}
+div.widget-display-wrapper div.widget-label-container {
+	display: inline-block;
+	margin-right: 5px;
+}
+div.widget-display-wrapper div.widget-display-text-content {
+	display: inline-block;
+	margin-right: 5px;
+}
+
 /*loading*/
 div.loading {
-	position: absolute;
+	position: fixed;
 	top: 50%;
 	left: 50%;
 	width: 100px;
@@ -161,7 +191,7 @@ div.widget-loading {
 }
 */
 div#mask-layer {
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
@@ -172,7 +202,7 @@ div#mask-layer {
 }
 
 div.widget-msg-container {
-	position: absolute;
+	position: fixed;
 	top: 40%;
 	left: 50%;
 	width: 300px;

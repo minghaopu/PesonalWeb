@@ -30,7 +30,7 @@
 							if ($key === 'uid' || $key === 'bio' || $key === 'resume' || $key === 'portrait' || $key === 'nickname') {
 								$data[$key] = $value;
 							}else {
-								if (!is_null($value)) {
+								if (!empty($value)) {
 									$apps[$key] = $value;
 								}
 							}
@@ -77,6 +77,7 @@
 						$success = true;
 						$errorcode = -1;
 						$data = $result->row;
+						
 					}else {
 						$success = false;
 						$errorcode = 5; //errorcode 5: delete fail

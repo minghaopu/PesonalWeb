@@ -96,9 +96,19 @@ mpw.controller("profile", [
 				$scope.widget.display.email.text = data.email;
 				$scope.widget.display.portrait.imgSrc = data.portrait;
 				for (var prop in data.apps) {
+					if (prop === "email") continue;
 					$scope.widget.display.apps[prop] = {
 						label: prop,
 						text: data.apps[prop]
+					}
+				}
+				$scope.$parent.apps.data = {}
+				for (var prop in data.apps) {
+					if (data.apps === "") continue;
+					$scope.$parent.apps.data[prop] = {
+						name: prop,
+						href: (prop === "email" ? "mailto:" : "http://") + data.apps[prop],
+						src: "./img/icon/" + prop + ".png"
 					}
 				}
 
@@ -221,6 +231,7 @@ mpw.controller("profile", [
 			}
 			$scope.widget.portUpdate.src = data.portrait
 			for (var prop in data.apps) {
+				if (prop === "email") continue;
 				$scope.widget.display.apps[prop] = {
 					label: prop,
 					text: data.apps[prop]

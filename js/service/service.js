@@ -411,6 +411,7 @@ mpw.factory("$formatData", ["$encrypt", function($encrypt) {
 				formInput[obj.name] = obj.data;
 			}
 		}
+		console.log(formInput)
 		if (arguments[2] !== undefined) {
 			if (angular.isObject(arguments[2])) {
 				angular.extend(formInput, arguments[2]);

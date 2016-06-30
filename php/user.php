@@ -34,7 +34,7 @@
 					if ($key === 'uid' || $key === 'bio' || $key === 'resume' || $key === 'portrait' || $key === 'nickname') {
 						$data[$key] = $value;
 					}else {
-						if (!is_null($value)) {
+						if (!empty($value)) {
 							$apps[$key] = $value;
 						}
 					}
@@ -212,7 +212,7 @@
 						if ($key === 'uid' || $key === 'bio' || $key === 'resume' || $key === 'portrait' || $key === 'nickname') {
 							$data[$key] = $value;
 						}else {
-							if (!is_null($value)) {
+							if (!empty($value)) {
 								$apps[$key] = $value;
 							}
 						}
@@ -253,13 +253,11 @@
 
 					$checkNickSql = sprintf(CHECKE_REP_NICKNAME, $nickname);
 					$checkNick = $db->query($checkNickSql);
-
 					
-					if ($checkNick->num_rows === 1 && $checkNick->row['uid'] === $uid) {
+					if ($checkNick->num_rows === 0 || ($checkNick->num_rows === 1 && $checkNick->row['uid'] === $uid)) {
 
 
 						$sql = sprintf(UPDATE_INFO, $nickname, $bio, $email, $facebook, $linkedin, $twitter, $github, $uid);
-
 						if ($db->_update($sql) === 1) {
 							$success = true;
 							$apps = array();
@@ -269,7 +267,7 @@
 								if ($key === 'uid' || $key === 'bio' || $key === 'resume' || $key === 'portrait' || $key === 'nickname') {
 									$data[$key] = $value;
 								}else {
-									if (!is_null($value)) {
+									if (!empty($value)) {
 										$apps[$key] = $value;
 									}
 								}
@@ -317,17 +315,22 @@
 					if ($newPwd === $confirm) {
 						$db = new DB();
 
-						$encodeOld = $this->encode($oldPwd);
 						$encodeNew = $this->encode($newPwd);
-						$sql = sprintf(CHANGE_PWD, $encodeNew, $uid ,$encodeOld);
 
-						if ($db->_update($sql) === 1) {
-							$success = true;
-						} else if ($db->_update($sql) === 0) {
-							$errorcode = 17; // old pwd wrong
+						$sql = sprintf(GET_OLD, $uid);
+						$result = $db->query($sql);
+						if (password_verify($oldPwd, $result->row['password'])) {
+							$sql = sprintf(CHANGE_PWD, $encodeNew, $uid);
+
+							if ($db->_update($sql) === 1) {
+								$success = true;
+							} else {
+								$errorcode = 15; //db error
+							}
 						} else {
-							$errorcode = 15; //db error
+							$errorcode = 17; // old pwd wrong
 						}
+
 						unset($db);
 					} else {
 						$errorcode = 11; // pwd != confirm
