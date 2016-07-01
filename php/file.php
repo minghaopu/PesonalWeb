@@ -25,7 +25,6 @@
 
 			if ($ssresult) {
 				$uid = $_SESSION['id'];
-				echo json_encode($_FILES["file"]["error"]);
 
 				if ($_FILES["file"]["error"] > 0) {
 					$errorcode = 21; //upload error
@@ -83,9 +82,9 @@
 							'png' => './img/portrait/portrait'.$uid.'.png'
 						);
 						$size = 2000000;
-						$newPath = '/img/portrait/portrait'.$uid.".".$ext;
+						$newPath = '../img/portrait/portrait'.$uid.".".$ext;
 						$storePath = './img/portrait/portrait'.$uid.".".$ext;
-						if ($ext === 'jpq' || $ext === 'gif' || $ext === 'bmp' || $ext === 'jpeg' || $ext === 'png'){
+						if ($ext === 'jpg' || $ext === 'gif' || $ext === 'bmp' || $ext === 'jpeg' || $ext === 'png'){
 							if ($_FILES["file"]["size"] < $size) {
 								// if (is_uploaded_file($_FILES['file']['name'])){
 									foreach ($oldPathArray as $key => $oldPath) {
