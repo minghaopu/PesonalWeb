@@ -173,11 +173,6 @@ mpw.directive("appLink", function() {
 		template: innerHTML,
 		scope: {
 			config: "="
-		},
-		compile: function(ele, attr, trans) {
-			return function(scope, ele, attr) {
-				console.log(scope)
-			}
 		}
 	}
 });
@@ -723,7 +718,6 @@ mpw.directive("dynamic", ["$compile", function($compile) {
 					var ann = "";
 					for (var i = 0; i < codes.length; i++) {
 						var c = codes[i];
-						console.log(c);
 						if (codes[i] === "/" && (codes[i + 1] == "*")) {
 							isAnno = true;
 							newCode += "<span class=\"code-word-annotation\">/*";

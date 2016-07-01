@@ -30,7 +30,8 @@ mpw.controller("edit", [
 				title: {
 					label: "Title",
 					name: "title",
-					data: ""
+					data: "",
+					inputCls: "long"
 				},
 				submit: {
 					text: "Submit",

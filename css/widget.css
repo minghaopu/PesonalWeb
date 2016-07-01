@@ -28,7 +28,16 @@ div.widget-tool-container ul li div img {
 }
 
 */
+.short {
+	width: 170px;
+}
 
+.medium {
+	width: 250px
+}
+.long {
+	width: 350px;
+}
 /*list*/
 div.widget-list-container div.row-column{
 	display: inline-block;
@@ -46,6 +55,11 @@ div.widget-text-wrapper div.widget-label-container {
 div.widget-text-content  {
 	display: inline-block;
 }
+div.widget-text-wrapper input{
+	width: 100%;
+}
+
+/*display*/
 div.widget-display-wrapper {
 	margin: 10px;
 }
@@ -627,9 +641,4 @@ div.widget-button-container button {
 }
 div.widget-button-container button:focus{
 	outline: none;
-}
-
-/*textbox*/
-div.widget-text-wrapper {
-	margin: 10px;
 }
