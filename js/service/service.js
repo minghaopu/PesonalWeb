@@ -2,8 +2,9 @@
 mpw.factory("$users", function() {
 
 	var isLogged = false;
-	var nickname = null;
+	var nickname = "";
 	var uid = null;
+	var apps = {};
 	return {
 		getStatus: function() {
 			return isLogged;
@@ -22,6 +23,26 @@ mpw.factory("$users", function() {
 		},
 		setId: function(value) {
 			uid = value;
+		},
+		setApps: function(value) {
+			apps = {};
+			for (var prop in value) {
+				if (value[prop] === "") continue;
+				apps[prop] = {
+					name: prop,
+					href: (prop === "email" ? "mailto:" : "http://") + value[prop],
+					src: "./img/icon/" + prop + ".png"
+				}
+			}
+		},
+		getApps: function() {
+			return apps;
+		},
+		reset: function() {
+			isLogged = false;
+			uid = null;
+			apps = {};
+			nickname = "";
 		}
 
 	};
@@ -408,7 +429,6 @@ mpw.factory("$formatData", ["$encrypt", function($encrypt) {
 				formInput[obj.name] = obj.data;
 			}
 		}
-		console.log(formInput)
 		if (arguments[2] !== undefined) {
 			if (angular.isObject(arguments[2])) {
 				angular.extend(formInput, arguments[2]);

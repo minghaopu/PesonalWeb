@@ -58,28 +58,28 @@ mpw.controller("index", [
 			}
 		}, function(data) {
 
-			$users.setStatus(true);
 			$users.setId(data.uid);
 			$users.setName(data.nickname);
-
-			$scope.nav = {
-				navs: [{
-					name: "My Blog",
-					url: "/" + data.nickname + "/blog"
-				}, {
-					name: "My Resume",
-					url: "/" + data.nickname + "/resume"
-				}],
-				nickname: data.nickname
-			};
-			var apps = data.apps;
-			for (var prop in apps) {
-				$scope.apps.data[prop] = {
-					name: prop,
-					href: (prop === "email" ? "mailto:" : "http://") + apps[prop],
-					src: "./img/icon/" + prop + ".png"
-				}
-			}
+			$users.setApps(data.apps);
+			$users.setStatus(true);
+			// $scope.nav = {
+			// 	navs: [{
+			// 		name: "My Blog",
+			// 		url: "/" + data.nickname + "/blog"
+			// 	}, {
+			// 		name: "My Resume",
+			// 		url: "/" + data.nickname + "/resume"
+			// 	}],
+			// 	nickname: data.nickname
+			// };
+			// var apps = data.apps;
+			// for (var prop in apps) {
+			// 	$scope.apps.data[prop] = {
+			// 		name: prop,
+			// 		href: (prop === "email" ? "mailto:" : "http://") + apps[prop],
+			// 		src: "./img/icon/" + prop + ".png"
+			// 	}
+			// }
 			if (initrequest !== "") {
 				$location.path("/" + initrequest + "/blog");
 			} else {
@@ -92,14 +92,36 @@ mpw.controller("index", [
 			return $users.getStatus();
 		}, function(newValue, oldValue) {
 			if (newValue) {
-				$scope.pageTitle = $users.getName();
+				var name = $users.getName();
+				$scope.pageTitle = name;
+
+				$scope.nav = {
+					navs: [{
+						name: "My Blog",
+						url: "/" + name + "/blog"
+					}, {
+						name: "My Resume",
+						url: "/" + name + "/resume"
+					}],
+					nickname: name
+				};
+				$scope.apps = $users.getApps();
 				$scope.isLogged = true;
 			} else {
 				$scope.$root.pageTitle = "Personal Web";
 				$scope.isLogged = false;
-				$users.setStatus(false);
-				$users.setId(null);
-				$users.setName(null);
+
+				$scope.apps = [];
+				$scope.nav = {
+					navs: [{
+						name: "My Blog",
+						url: ""
+					}, {
+						name: "My Resume",
+						url: ""
+					}],
+					nickname: ""
+				};
 			}
 		})
 	}

@@ -63,6 +63,7 @@
 		public function login($param) {
 			$success = false;
 			$data = array();
+			$apps = array();
 			$errorcode = -1;
 
 
@@ -86,12 +87,11 @@
 					if (password_verify($password, $result->row['password'])) {
 
 						$success = true;
-						$data['uid'] = $result->row['uid'];
-						$data['nickname'] = $result->row['nickname'];
+						$uid = $result->row['uid'];
 
 						// set cookie and session id
 						session_start();
-						$encodeUID = $this->encode($result->row['uid']);
+						$encodeUID = $this->encode($uid);
 						$encodeNAME = $this->encode($result->row['nickname']);
 						$time = time();
 
@@ -103,6 +103,21 @@
 
 						setcookie('uid', $encodeUID, $time + LIFETIME);
 						setcookie('name', $encodeNAME, $time + LIFETIME);
+
+						// format return data -- user info
+
+						$sql = sprintf(GET_INFO, $uid);
+						$result = $db->query($sql);
+						foreach($result->row as $key => $value) {
+							if ($key === 'uid' || $key === 'bio' || $key === 'resume' || $key === 'portrait' || $key === 'nickname') {
+								$data[$key] = $value;
+							}else {
+								if (!empty($value)) {
+									$apps[$key] = $value;
+								}
+							}
+						}
+						$data['apps'] = $apps;
 
 					}else {
 						$errorcode = 19; // pwd wrong
@@ -242,12 +257,12 @@
 					$errorcode = 7; // nickname field empty
 				} else {
 					$nickname = addslashes($param->nickname);
-					$bio = addslashes($param->bio);
-					$email = addslashes($param->email);
-					$facebook = addslashes($param->facebook);
-					$linkedin = addslashes($param->linkedin);
-					$twitter = addslashes($param->twitter);
-					$github = addslashes($param->github);
+					$bio = empty($param->bio)?'':addslashes($param->bio);
+					$email = empty($param->email)?'':addslashes($param->email);
+					$facebook = empty($param->facebook)?'':addslashes($param->facebook);
+					$linkedin = empty($param->linkedin)?'':addslashes($param->linkedin);
+					$twitter = empty($param->twitter)?'':addslashes($param->twitter);
+					$github = empty($param->github)?'':addslashes($param->github);
 
 					$db = new DB();
 

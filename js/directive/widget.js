@@ -97,9 +97,7 @@ mpw.directive("navigator", ["$location", "$users", "$timeout", "$request", funct
 							action: "logout"
 						}
 					}, function() {
-						$users.setStatus(false);
-						$users.setId(null);
-						$users.setName(null);
+						$users.reset();
 					})
 				}
 				scope.gotoProfile = function() {
@@ -159,7 +157,7 @@ mpw.directive("appLink", function() {
 	var innerHTML = 	"<div class=\"widget-apps-container\">";
 		innerHTML += 		"<div class=\"widget-apps-content\">";
 		innerHTML += 			"<ul class=\"widget-apps-ul\">";
-		innerHTML += 				"<li ng-repeat=\"app in config.data\" class=\"widget-apps-li {{app.name}}\">";
+		innerHTML += 				"<li ng-repeat=\"app in config\" class=\"widget-apps-li {{app.name}}\">";
 		innerHTML += 					"<a href=\"{{app.href}}\" class=\"widget-app-link\">";
 		innerHTML += 						"<img ng-src=\"{{app.src}}\" alt=\"{{app.name}}\" class=\"widget-app-img\">";
 		innerHTML += 					"</a>";

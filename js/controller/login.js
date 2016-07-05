@@ -1,28 +1,9 @@
 mpw.controller("login", ["$scope", "$users", "$message", "$error", "$request", "$formatData", "$location", function($scope, $users, $message, $error, $request, $formatData, $location) {
 	var loginSuccess = function(data) {
-		$scope.$parent.nav = {
-			navs: [{
-				name: "My Blog",
-				url: "/" + data.nickname + "/blog"
-			}, {
-				name: "My Resume",
-				url: "/" + data.nickname + "/resume"
-			}],
-			nickname: data.nickname
-		};
-
-		$scope.$parent.nav.nickname = data.nickname;
-		var apps = data.apps;
-		for (var prop in apps) {
-			$scope.$parent.apps.data[prop] = {
-				name: prop,
-				href: (prop === "email" ? "mailto:" : "") + apps[prop],
-				src: "./img/icon/" + prop + ".png"
-			}
-		}
-		$users.setStatus(true);
 		$users.setId(data.uid);
 		$users.setName(data.nickname);
+		$users.setApps(data.apps);
+		$users.setStatus(true);
 		$location.path("/" + data.nickname + "/blog");
 	}
 

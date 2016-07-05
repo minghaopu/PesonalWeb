@@ -5,7 +5,8 @@ mpw.controller("profile", [
 	"$formatData",
 	"$message",
 	"$error",
-	function($scope, $timeout, $request, $formatData, $message, $error) {
+	"$users",
+	function($scope, $timeout, $request, $formatData, $message, $error, $users) {
 		$scope.isEditing = false;
 		$scope.widget = {
 			display: {},
@@ -95,6 +96,9 @@ mpw.controller("profile", [
 				$scope.widget.display.bio.text = data.bio;
 				$scope.widget.display.email.text = data.email;
 				$scope.widget.display.portrait.imgSrc = data.portrait;
+				$users.setApps(data.apps);
+				$scope.$parent.apps = $users.getApps();
+				$scope.widget.display.apps = {}
 				for (var prop in data.apps) {
 					if (prop === "email") continue;
 					$scope.widget.display.apps[prop] = {
@@ -102,16 +106,6 @@ mpw.controller("profile", [
 						text: data.apps[prop]
 					}
 				}
-				$scope.$parent.apps.data = {}
-				for (var prop in data.apps) {
-					if (data.apps === "") continue;
-					$scope.$parent.apps.data[prop] = {
-						name: prop,
-						href: (prop === "email" ? "mailto:" : "http://") + data.apps[prop],
-						src: "./img/icon/" + prop + ".png"
-					}
-				}
-
 				me.disabled = false;
 				$scope.isEditing = false;
 			}, function() {
