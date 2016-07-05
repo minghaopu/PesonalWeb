@@ -1,4 +1,31 @@
 mpw.controller("login", ["$scope", "$users", "$message", "$error", "$request", "$formatData", "$location", function($scope, $users, $message, $error, $request, $formatData, $location) {
+	var loginSuccess = function(data) {
+		$scope.$parent.nav = {
+			navs: [{
+				name: "My Blog",
+				url: "/" + data.nickname + "/blog"
+			}, {
+				name: "My Resume",
+				url: "/" + data.nickname + "/resume"
+			}],
+			nickname: data.nickname
+		};
+
+		$scope.$parent.nav.nickname = data.nickname;
+		var apps = data.apps;
+		for (var prop in apps) {
+			$scope.$parent.apps.data[prop] = {
+				name: prop,
+				href: (prop === "email" ? "mailto:" : "") + apps[prop],
+				src: "./img/icon/" + prop + ".png"
+			}
+		}
+		$users.setStatus(true);
+		$users.setId(data.uid);
+		$users.setName(data.nickname);
+		$location.path("/" + data.nickname + "/blog");
+	}
+
 	$scope.isLogin = true;
 
 	$scope.widget = {
@@ -48,40 +75,9 @@ mpw.controller("login", ["$scope", "$users", "$message", "$error", "$request", "
 					// url: "./data/login.json",
 					url: "./php/user",
 					data: $formatData($scope.widget.loginForm, "login")
-				}, function(data) {
-					$users.setStatus(true);
-					$users.setId(data.uid);
-					$users.setName(data.nickname);
-					console.log($scope.$parent)
-					$scope.$parent.nav = {
-						navs: [{
-							name: "My Blog",
-							url: "/" + data.nickname + "/blog"
-						}, {
-							name: "My Resume",
-							url: "/" + data.nickname + "/resume"
-						}],
-						nickname: data.nickname
-					};
-
-					$scope.$parent.nav.nickname = data.nickname;
-					var apps = data.apps;
-					for (var prop in apps) {
-						$scope.$parent.apps.data[prop] = {
-							name: prop,
-							href: (prop === "email" ? "mailto:" : "") + apps[prop],
-							src: "./img/icon/" + prop + ".png"
-						}
-					}
-					$location.path("/" + data.nickname + "/blog");
-				}, function(data) {
+				}, loginSuccess(data), function(data) {
 					me.disabled = false;
 				})
-				// $users.login(, function(data) {
-
-				// }, function(error) {
-					
-				// })
 			}
 		}
 	}
@@ -131,33 +127,7 @@ mpw.controller("login", ["$scope", "$users", "$message", "$error", "$request", "
 				$request.query({
 					url: "./php/user",
 					data: $formatData($scope.widget.registerForm, "register")
-				}, function(data) {
-					$users.setStatus(true);
-					$users.setId(data.uid);
-					$users.setName(data.nickname);
-					$scope.$parent.nav = {
-						navs: [{
-							name: "My Blog",
-							url: "/" + data.nickname + "/blog"
-						}, {
-							name: "My Resume",
-							url: "/" + data.nickname + "/resume"
-						}],
-						nickname: data.nickname
-					};
-
-					$scope.$parent.nav.nickname = data.nickname;
-					var apps = data.apps;
-					for (var prop in apps) {
-						$scope.$parent.apps.data[prop] = {
-							name: prop,
-							href: (prop === "email" ? "mailto:" : "") + apps[prop],
-							src: "./img/icon/" + prop + ".png"
-						}
-					}
-					$location.path("/" + data.nickname + "/blog");
-
-				}, function() {
+					}, loginSuccess(data), function() {
 					me.disabled = false;
 				})
 			}

@@ -5,8 +5,6 @@ mpw.factory("$users", function() {
 	var nickname = null;
 	var uid = null;
 	return {
-
-
 		getStatus: function() {
 			return isLogged;
 		},
@@ -17,7 +15,6 @@ mpw.factory("$users", function() {
 			return uid;
 		},
 		setStatus: function(value) {
-			console.log(this)
 			isLogged = value;
 		},
 		setName: function(value) {

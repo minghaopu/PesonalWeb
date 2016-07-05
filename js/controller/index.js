@@ -91,7 +91,7 @@ mpw.controller("index", [
 		$scope.$watch(function() {
 			return $users.getStatus();
 		}, function(newValue, oldValue) {
-			if (newValue === true) {
+			if (newValue) {
 				$scope.pageTitle = $users.getName();
 				$scope.isLogged = true;
 			} else {
