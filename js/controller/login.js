@@ -75,7 +75,9 @@ mpw.controller("login", ["$scope", "$users", "$message", "$error", "$request", "
 					// url: "./data/login.json",
 					url: "./php/user",
 					data: $formatData($scope.widget.loginForm, "login")
-				}, loginSuccess(data), function(data) {
+				}, function(data) {
+					loginSuccess(data);
+				}, function(data) {
 					me.disabled = false;
 				})
 			}
@@ -127,7 +129,9 @@ mpw.controller("login", ["$scope", "$users", "$message", "$error", "$request", "
 				$request.query({
 					url: "./php/user",
 					data: $formatData($scope.widget.registerForm, "register")
-					}, loginSuccess(data), function() {
+					}, function(data) {
+						loginSuccess(data);
+					}, function() {
 					me.disabled = false;
 				})
 			}
