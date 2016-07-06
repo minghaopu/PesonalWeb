@@ -139,7 +139,7 @@
 			$success = false;
 			$data = array();
 			$errorcode = -1;
-
+/*
 			if (empty($param->username)) {
 				$errorcode = 6; // username field empty
 			} else if (empty($param->nickname)) {
@@ -204,7 +204,7 @@
 					$errorcode = 11; // pwd != confirm
 				}
 			}
-
+*/
 			$return = new ReturnData($data, $errorcode, $success);
 			echo $return->toJson();
 		}
